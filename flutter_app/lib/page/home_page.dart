@@ -3,22 +3,17 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/widgets.dart';
-
-//import 'package:flutter_app/config/json.dart';
+import 'package:color_dart/color_dart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../service/service_method.dart';
-import '../config/common.dart';
-import 'package:flutter/cupertino.dart';
-import '../provide/currentIndex.dart';
+import 'package:flutter_app/config/common.dart';
+import 'package:flutter_app/utils/global.dart';
+
 class HomePage extends StatelessWidget {
   @override
 //  double hh = MediaQueryData.fromWindow(window).padding.top;
 
   Widget build(BuildContext context) {
     return Scaffold(
-//        appBar: AppBar(
-//          title:Text('hello'),
-//        ),
       body: MainContent(),
     );
   }
@@ -29,7 +24,8 @@ class MainContent extends StatefulWidget {
   MainContentState createState() => new MainContentState();
 }
 
-class MainContentState extends State<MainContent> {
+class MainContentState extends State<MainContent>
+    with TickerProviderStateMixin {
   var url = "https://panda36.com";
   var adver = [];
   var navList = [];
@@ -41,34 +37,33 @@ class MainContentState extends State<MainContent> {
   var good_list2 = [];
   var good_list3 = [];
   var list = [];
+  String bgcolor = "#ffffff";
+  AnimationController controller; //动画控制器
+  CurvedAnimation curved; //曲线动画，动画插值，
+  bool forward = true;
 
 //  首页轮播图，导航栏，广告位，楼层数据
-  void _getIndex() {
-    request('Shop-Index-index').then((val) {
-      if (val['status'] == 0) {
-        setState(() {
-          this.navList = val['navList'];
-          this.adver = val['adver'];
-          this.adver1['ad_url'] = val['adver1']['ad_url'];
-          this.adver1['ad_image'] = val['adver1']['ad_image'];
-          this.good_list1 = val['good_list1'];
-          this.good_list2 = val['good_list2'];
-          this.good_list3 = val['good_list3'];
-          this.text01 = val['text01'];
-          this.text02 = val['text02'];
-          this.text03 = val['text03'];
-        });
-      }
-    });
-
+  void _getIndex() async {
+    var result = await G.req.index.index();
+    Map val = result.data;
+    if (val['status'] == 0) {
+      setState(() {
+        this.navList = val['navList'];
+        this.adver = val['adver'];
+        this.adver1['ad_url'] = val['adver1']['ad_url'];
+        this.adver1['ad_image'] = val['adver1']['ad_image'];
+        this.good_list1 = val['good_list1'];
+        this.good_list2 = val['good_list2'];
+        this.good_list3 = val['good_list3'];
+        this.text01 = val['text01'];
+        this.text02 = val['text02'];
+        this.text03 = val['text03'];
+        this.bgcolor = this.adver[0]['ad_name'];
+      });
+    }
   }
- void _getuserinfo(){
-   request('User-Profile-index').then((val) {
-     print(val);
-   });
- }
 //  底部商品列表
-  void _getGoodsList() {
+  void _getGoodsList()  async {
     var formData = {
       'id': "",
       'page': 1,
@@ -77,81 +72,85 @@ class MainContentState extends State<MainContent> {
       'order_by': 'default',
       'sort_asc': ""
     };
-    request('Shop-Shop-goodsList', formData: formData).then((val) {
+
+      var result = await G.req.goods.goodsList(formData);
+      Map val = result.data;
       if (val['status'] == 0) {
         setState(() {
           this.list = val['data']['list'];
         });
+      }else {
+        G.toast(val['messages']);
       }
-    });
   }
-// 头部搜索
-  Widget AppContent() {
-    return Container(
-//        padding: EdgeInsets.fromLTRB(0, hh, 0, 0),
-        child: Container(
-      color: Color.fromRGBO(157, 27, 13, 1),
-      height: 48.0,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              width: 40.0,
-              height: 40.0,
-              child: Icon(
-                Icons.ac_unit,
-                color: Colors.white,
-                size: 28.0,
+// 头部导航栏
+  Widget TextFileWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(
+            right: 5.0,
+          ),
+          child: Icon(
+            Icons.ac_unit,
+            color: Colors.white,
+            size: 28.0,
+          ),
+        ),
+        Expanded(
+          child: Container(
+            //修饰黑色背景与圆角
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            alignment: Alignment.center,
+            height: 36,
+            padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+            child: Text(
+              '请输入商品关键词',
+              style: TextStyle(
+                color: Colors.black12,
               ),
             ),
           ),
-          Expanded(
-              flex: 5,
-              child: Container(
-                width: 38.0,
-                height: 38.0,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '请输入商品关键词',
-                  style: TextStyle(
-                    color: Colors.black12,
-                  ),
-                ),
-              )),
-          Expanded(
-            child: Container(
-              width: 80.0,
-              height: 80.0,
-              child: Icon(
-                Icons.art_track,
-                size: 28.0,
-                color: Color.fromRGBO(255, 255, 255, 1),
-              ),
-            ),
+          flex: 1,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 5.0,
           ),
-        ],
-      ),
-    ));
+          child: Icon(
+            Icons.ac_unit,
+            color: Colors.white,
+            size: 28.0,
+          ),
+        )
+      ],
+    );
   }
+
 
 //  轮播图数据遍历
   List<Widget> _getAdv() {
     var list = adver.map((value) {
       return new Builder(
         builder: (BuildContext context) {
-          return new Container(
+          return  Container(
             width: MediaQuery.of(context).size.width,
-            margin: new EdgeInsets.symmetric(horizontal: 5.0),
-            decoration: new BoxDecoration(
-              color: Color.fromRGBO(157, 27, 13, 1),
+
+            margin:  EdgeInsets.symmetric(horizontal: 10.0),
+            decoration:  BoxDecoration(
+              color: hex(value["ad_name"].toString()),
+              borderRadius: BorderRadius.circular(6.0),
             ),
-            child: new Image.network(
-              url + value["ad_image"],
-              fit: BoxFit.fill,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              child: Image.network(
+                url + value["ad_image"],
+                fit: BoxFit.cover,
+              ),
             ),
           );
         },
@@ -248,12 +247,32 @@ class MainContentState extends State<MainContent> {
 //  轮播图
   Widget BannerContent() {
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-      child: new CarouselSlider(
-          items: this.adver.length > 0 ? this._getAdv() : this._getAdvExample(),
-          height: 180.0,
-          autoPlay: true),
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            child: Container(
+              height: ScreenUtil().setHeight(320),
+              color: hex(bgcolor),
+            ),
+          ),
+          Positioned(
+            child: new CarouselSlider(
+              items: this.adver.length > 0
+                  ? this._getAdv()
+                  : this._getAdvExample(),
+              height: ScreenUtil().setHeight(380),
+              autoPlay: true,
+              aspectRatio: 2.0,
+              viewportFraction:1.0,
+              onPageChanged: (index) {
+                setState(() {
+                  bgcolor =adver.length>0? adver[index]['ad_name']:"#ec3838";
+                });
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -266,17 +285,16 @@ class MainContentState extends State<MainContent> {
       );
     }
     return InkWell(
-      onTap: () {},
-      child: AspectRatio(
-        aspectRatio: 12/4,
-        child: Image.network(
-          this.url + this.adver1['ad_image'],
-          fit: BoxFit.cover,
+        onTap: () {},
+        child: AspectRatio(
+          aspectRatio: 12 / 4,
+          child: Image.network(
+            this.url + this.adver1['ad_image'],
+            fit: BoxFit.cover,
 //          height: 80.0,
-          alignment: Alignment.center,
-        ),
-      )
-    );
+            alignment: Alignment.center,
+          ),
+        ));
   }
 
 //  导航栏
@@ -408,55 +426,6 @@ class MainContentState extends State<MainContent> {
 
 //  楼层标题
   Widget _myListTile(var text) {
-//    return Row(
-//      children: <Widget>[
-//        Expanded(
-//            child: Image.network(
-//          'https://panda36.com/static/panda36/assets/img/m/zuanshi.png',
-//          width: 38.0,
-//          height: 40.0,
-//        )),
-//        Expanded(
-//            flex: 6,
-//            child: Container(
-//              height: 40.0,
-//              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-//              child: Column(
-//                children: <Widget>[
-//                  Container(
-//                    alignment: Alignment.centerLeft,
-//                    child: Text(
-//                      text["ad_name"],
-//                      overflow: TextOverflow.ellipsis,
-//                      maxLines: 1,
-//                      style: TextStyle(
-//                          color: Color.fromRGBO(48, 49, 51, 1), fontSize: 18.0),
-//                    ),
-//                  ),
-//                  Container(
-//                    alignment: Alignment.centerLeft,
-//                    child: Text(
-//                      'Competitive Products For You',
-//                      maxLines: 1,
-//                      style: TextStyle(
-//                          color: Color.fromRGBO(144, 147, 153, 1),
-//                          fontSize: 16.0),
-//                      textAlign: TextAlign.left,
-//                    ),
-//                  ),
-//                ],
-//              ),
-//            )),
-//        Expanded(
-//          child: Container(
-//              width: 30.0,
-//              height: 40.0,
-//              alignment: Alignment.centerRight,
-//              child: Icon(Icons.arrow_forward_ios,
-//                  size: 22.0, color: Color.fromRGBO(144, 147, 153, 1))),
-//        ),
-//      ],
-//    );
     return ListTile(
       leading: Image.network(
         'https://panda36.com/static/panda36/assets/img/m/zuanshi.png',
@@ -577,8 +546,9 @@ class MainContentState extends State<MainContent> {
                   width: 380.0,
                   height: 390.0,
                   child: ClipRRect(
-                    borderRadius:
-                        new BorderRadius.vertical(top: Radius.elliptical(8, 8)),
+                    borderRadius: new BorderRadius.vertical(
+                      top: Radius.elliptical(8, 8),
+                    ),
                     child: Image.network(
                       url + val['goods_image'],
                       fit: BoxFit.cover,
@@ -618,12 +588,12 @@ class MainContentState extends State<MainContent> {
     return list.toList();
   }
 
-  List<Widget> _getFloorGoodsExample({double widths,  double heights = 166}) {
-    var list1 = [1,2,3,4,5,6];
+  List<Widget> _getFloorGoodsExample({double widths, double heights = 166}) {
+    var list1 = [1, 2, 3, 4, 5, 6];
     var name = "";
-    var list = list1.map((val) {
-      return
-         Container(
+    var list = list1.map(
+      (val) {
+        return Container(
           height: heights,
           width: ScreenUtil().setWidth(widths),
           decoration: BoxDecoration(
@@ -662,13 +632,11 @@ class MainContentState extends State<MainContent> {
               ),
             ],
           ),
-      );
-    },
+        );
+      },
     );
     return list.toList();
   }
-
-
 
   //二楼商品
   Widget FloorTwoContent(BuildContext context) {
@@ -690,7 +658,8 @@ class MainContentState extends State<MainContent> {
               spacing: 10,
               runSpacing: 10,
               children: this.good_list2.length > 0
-                  ? this._getFloorGoods(widths: 216, goods: 'goods2', context: context)
+                  ? this._getFloorGoods(
+                      widths: 216, goods: 'goods2', context: context)
                   : this._getFloorGoodsExample(widths: 216),
             ),
           ),
@@ -719,8 +688,9 @@ class MainContentState extends State<MainContent> {
           child: Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: this.good_list2.length > 0?_getFloorGoods(widths: 216, goods: 'goods3', context: context)
-                  : this._getFloorGoodsExample(widths: 216),
+            children: this.good_list2.length > 0
+                ? _getFloorGoods(widths: 216, goods: 'goods3', context: context)
+                : this._getFloorGoodsExample(widths: 216),
           ),
         ),
       ]),
@@ -730,7 +700,6 @@ class MainContentState extends State<MainContent> {
   //四楼商品
   Widget FloorFourContent(BuildContext context) {
     return Container(
-//      height: 415.0,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
       child: Column(children: <Widget>[
@@ -747,15 +716,14 @@ class MainContentState extends State<MainContent> {
                 height: 30.0,
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(3, 0,0,0),
-                child:  Text(
+                padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                child: Text(
                   'Рекомендации',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Color.fromRGBO(48, 49, 51, 1), fontSize: 17.0),
                 ),
               ),
-
             ],
           ),
         ),
@@ -767,7 +735,7 @@ class MainContentState extends State<MainContent> {
             children: this.list.length > 0
                 ? this._getFloorGoods(
                     widths: 330, goods: 'list', heights: 225, context: context)
-                : this._getFloorGoodsExample(widths: 330,heights: 225),
+                : this._getFloorGoodsExample(widths: 330, heights: 225),
           ),
         ),
       ]),
@@ -777,10 +745,15 @@ class MainContentState extends State<MainContent> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: hex(bgcolor),
+        title: TextFileWidget(),
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
         child: ListView(
           children: <Widget>[
-            AppContent(),
             BannerContent(),
             NavContent(context),
             FloorOneContent(),

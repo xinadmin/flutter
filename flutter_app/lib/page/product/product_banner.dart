@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-import '../../provide/details_info.dart';
+import 'package:flutter_app/provide/details_info.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 //商品详情页的首屏区域，包括图片、商品名称，商品价格，商品编号的UI展示

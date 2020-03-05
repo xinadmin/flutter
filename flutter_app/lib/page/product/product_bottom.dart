@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter/cupertino.dart';
-import '../../provide/details_info.dart';
-import '../../provide/currentIndex.dart';
-import '../product/BaseDialog.dart';
+import 'package:flutter_app/provide/details_info.dart';
+import 'package:flutter_app/provide/currentIndex.dart';
+import 'package:flutter_app/page/product/BaseDialog.dart';
 import 'package:flutter_app/config/common.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,7 +62,7 @@ class DetailsBottomState extends State<DetailsBottom> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/cart');
+                 Navigator.pushNamed(context, '/cart');
               },
               child: Container(
                   alignment: Alignment.center,

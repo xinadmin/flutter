@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/cartInfo.dart';
+import 'package:flutter_app/model/cartInfo.dart';
 import 'dart:convert';
-import '../service/service_method.dart';
+import 'package:flutter_app/service/service_method.dart';
+import 'package:flutter_app/config/common.dart';
+import 'package:flutter_app/utils/global.dart';
 
 class CartProvide with ChangeNotifier {
   String cartString = "[]";
@@ -11,56 +13,51 @@ class CartProvide with ChangeNotifier {
   double allPrice = 0; //总价格
   int allGoodsCount = 0; //商品总数量
   bool isAllCheck = true; //是否全选
-
-  save(goodsId, goodsName, count, price, images) async {
+//  添加购物车后再次查询
+  save() async {
     //初始化SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    cartString = prefs.getString('cartInfo'); //获取持久化存储的值
-    var temp = cartString == null ? [] : json.decode(cartString.toString());
-    //把获得值转变成List
-    List<Map> tempList = (temp as List).cast();
-    //声明变量，用于判断购物车中是否已经存在此商品ID
-    var isHave = false; //默认为没有
-    int ival = 0; //用于进行循环的索引使用
-    allPrice = 0;
-    allGoodsCount = 0; //把商品总数量设置为0
-    tempList.forEach((item) {
-      //进行循环，找出是否已经存在该商品
-      //如果存在，数量进行+1操作
-      if (item['goodsId'] == goodsId) {
-        tempList[ival]['count'] = item['count'] + 1;
-        cartList[ival].count++;
-        isHave = true;
+    //获得购物车中的商品,这时候是一个字符串
+    cartString = prefs.getString('cartInfo');
+    //判断得到的字符串是否有值，如果不判断会报错
+    var result = await G.req.cart.getCartList();
+    Map val = result.data;
+    if (val['status'] == "0") {
+      allPrice = 0;
+      allGoodsCount = 0;
+      isAllCheck = true;
+      List<Map> carts = [];
+      cartList = [];
+//          有数据进行对象遍历
+      if (val['data'].length > 0) {
+        //把cartList进行初始化，防止数据混乱
+        G.toast('新获取购物车数据'+ val['data'].length.toString()+'条');
+        for (var item in val['data']) {
+          if (item['is_selected'] == null) {
+            item['is_selected'] = '0';
+            item['isCheck'] = false;
+            isAllCheck = false;
+          } else {
+            if (item['is_selected'] == '1') {
+              item['isCheck'] = true;
+              allPrice += (double.parse(item['goods_number']) *
+                  double.parse(item['goods_price']));
+            } else {
+              item['isCheck'] = false;
+              isAllCheck = false;
+            }
+          }
+          cartList.add(new CartInfoMode.fromJson(item));
+          carts.add(item);
+        }
+        cartString = json.encode(carts).toString();
+        prefs.setString('cartInfo', cartString);
       }
-      if (item['isCheck']) {
-        allPrice += (cartList[ival].price * cartList[ival].count);
-        allGoodsCount += cartList[ival].count;
-      }
-
-      ival++;
-    });
-    //  如果没有，进行增加
-    if (!isHave) {
-      Map<String, dynamic> newGoods = {
-        'goodsId': goodsId,
-        'goodsName': goodsName,
-        'count': count,
-        'price': price,
-        'images': images,
-        'isCheck': true //是否已经选择
-      };
-      tempList.add(newGoods);
-      cartList.add(new CartInfoMode.fromJson(newGoods));
-      allPrice += (count * price);
-      allGoodsCount += count;
+    } else {
+      G.toast('系统出错');
     }
-    //把字符串进行encode操作，
-    cartString = json.encode(tempList).toString();
-
-    prefs.setString('cartInfo', cartString); //进行持久化
     notifyListeners();
   }
-
   //删除购物车中的商品
   remove() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,100 +66,134 @@ class CartProvide with ChangeNotifier {
     cartList = [];
     allPrice = 0;
     allGoodsCount = 0;
-    print('清空完成-----------------');
+    G.toast('全部清空');
     notifyListeners();
   }
 
-  //得到购物车中的商品
+  //购物车中的商品
   getCartInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //获得购物车中的商品,这时候是一个字符串
     cartString = prefs.getString('cartInfo');
-
-    //把cartList进行初始化，防止数据混乱
-    cart = [];
     //判断得到的字符串是否有值，如果不判断会报错
+    cartList = [];
     if (cartString == null) {
-      await request('Shop-Shopping_cart-index').then((val) {
-        if (val['status'] == 0) {
-          List<Map> tempList = val['data'];
-          allPrice = 0;
-          allGoodsCount = 0;
-          isAllCheck = true;
-          List<Map> newList = [];
-          for (var item in tempList) {
-            var newItem = item;
-            if (newItem['is_selected']) {
-              allPrice += (newItem['goods_number'] * newItem['goods_price']);
-              allGoodsCount += newItem['goods_number'];
-            } else {
+//      请求未登录的购物车数据
+      var result = await G.req.cart.getCartList();
+      Map val = result.data;
+      if (val['status'] == "0") {
+        allPrice = 0;
+        allGoodsCount = 0;
+        isAllCheck = true;
+        List<Map> carts = [];
+//          有数据进行对象遍历
+        if (val['data'].length > 0) {
+          G.toast('获取购物车数据'+ val['data'].length.toString()+'条');
+          //把cartList进行初始化，防止数据混乱
+          for (var item in val['data']) {
+            if (item['is_selected'] == null) {
+              item['is_selected'] = '0';
+              item['isCheck'] = false;
               isAllCheck = false;
+            } else {
+              if (item['is_selected'] == '1') {
+                item['isCheck'] = true;
+                allPrice += (double.parse(item['goods_number']) *
+                    double.parse(item['goods_price']));
+              } else {
+                item['isCheck'] = false;
+                isAllCheck = false;
+              }
             }
-            newList.add(newItem);
+            cartList.add(new CartInfoMode.fromJson(item));
+            carts.add(item);
           }
-          cartString = json.encode(newList).toString();
-          prefs.setString('cartInfo', cartString); //
+//            存储缓存中
+          cartString = json.encode(carts).toString();
+          prefs.setString('cartInfo', cartString);
+
         }
-      });
+      } else {
+        G.toast('系统出错');
+      }
     } else {
+      //把cartList进行初始化，防止数据混乱
+      cartList = [];
       List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
       allPrice = 0;
       allGoodsCount = 0;
       isAllCheck = true;
-      List<Map> newList = [];
-      for (var item in tempList) {
-        var newItem = item;
-        if (newItem['is_selected']) {
-          allPrice += (newItem['goods_number'] * newItem['goods_price']);
-          allGoodsCount += newItem['goods_number'];
-        } else {
-          isAllCheck = false;
+      G.toast('获取购物车缓存数据'+ tempList.length.toString()+'条');
+      if (tempList.length > 0) {
+        for (var item in tempList) {
+          if (item['is_selected'] == null) {
+            item['is_selected'] = '0';
+            item['isCheck'] = false;
+            isAllCheck = false;
+          } else {
+            if (item['is_selected'] == '1') {
+              item['isCheck'] = true;
+              allPrice += (double.parse(item['goods_number'].toString()) *  double.parse(item['goods_price'].toString()));
+//              allPrice += item['goods_number'] * double.parse(item['goods_price']);
+            } else {
+              item['isCheck'] = false;
+              isAllCheck = false;
+            }
+          }
+          cartList.add(new CartInfoMode.fromJson(item));
         }
-        cart.add(newItem);
-      };
-  }
-    notifyListeners
-    (
-    );
+      }
+    }
+    notifyListeners();
   }
 
   //删除单个购物车商品
-  deleteOneGoods(String goodsId) async {
+  deleteOneGoods(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
     List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
-
     int tempIndex = 0;
     int delIndex = 0;
-    tempList.forEach((item) {
-      if (item['goodsId'] == goodsId) {
-        delIndex = tempIndex;
-      }
-      tempIndex++;
-    });
-    tempList.removeAt(delIndex);
-    cartString = json.encode(tempList).toString();
-    prefs.setString('cartInfo', cartString); //
-    await getCartInfo();
+    var goods = {'goods_id': id};
+    var result = await G.req.cart.remove(goods);
+    Map val = result.data;
+    if (val['status'] == 0) {
+      tempList.forEach((item) {
+        if (item['id'] == id) {
+          delIndex = tempIndex;
+        }
+        tempIndex++;
+      });
+      tempList.removeAt(delIndex);
+    }
+      cartString = json.encode(tempList).toString();
+      prefs.setString('cartInfo', cartString); //
+      await getCartInfo();
+
   }
 
   //修改选中状态
-  changeCheckState(CartInfoMode cartItem) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    cartString = prefs.getString('cartInfo');
-    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
-    int tempIndex = 0;
-    int changeIndex = 0;
-    tempList.forEach((item) {
-      if (item['goodsId'] == cartItem.goodsId) {
-        changeIndex = tempIndex;
+  changeCheckState(var  cartItem) async {
+    var formData = {
+      'goods_id': cartItem.id,
+      'is_select': cartItem.isCheck ? 0 : 1
+    };
+    var result =await G.req.cart.ischeck(formData);
+    Map val = result.data;
+      if (val['status'] == "0") {
+        cart.map((item) {
+          if (item['goodsId'] == cartItem.goodsId) {
+            item['is_selected'] = !item.isCheck;
+          }
+          if (item['isCheck']) {
+            allPrice += (item['goods_number'] * item['goods_price']);
+            allGoodsCount += item['goods_number'];
+          } else {
+            isAllCheck = false;
+          }
+        });
       }
-      tempIndex++;
-    });
-    tempList[changeIndex] = cartItem.toJson();
-    cartString = json.encode(tempList).toString();
-    prefs.setString('cartInfo', cartString); //
-    await getCartInfo();
+    notifyListeners();
   }
 
   //点击全选按钮操作
@@ -190,20 +221,29 @@ class CartProvide with ChangeNotifier {
     List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
     int tempIndex = 0;
     int changeIndex = 0;
-    tempList.forEach((item) {
-      if (item['goodsId'] == cartItem.goodsId) {
-        changeIndex = tempIndex;
+    var number = cartItem.goods_number;
+    var goods = {
+      'goods_id': cartItem.id,
+      'goods_number': number+1
+    };
+    var result = await G.req.cart.changegoodsnumbe(goods);
+    Map val = result.data;
+    if(val['status']==0){
+      tempList.forEach((item) {
+        if (item['id'] == cartItem.id) {
+          changeIndex = tempIndex;
+        }
+        tempIndex++;
+      });
+      if (todo == 'add') {
+        cartItem.goods_number++;
+      } else if (cartItem.goods_number > 1) {
+        cartItem.goods_number--;
       }
-      tempIndex++;
-    });
-    if (todo == 'add') {
-      cartItem.count++;
-    } else if (cartItem.count > 1) {
-      cartItem.count--;
+      tempList[changeIndex] = cartItem.toJson();
+      cartString = json.encode(tempList).toString();
+      prefs.setString('cartInfo', cartString); //
+      await getCartInfo();
     }
-    tempList[changeIndex] = cartItem.toJson();
-    cartString = json.encode(tempList).toString();
-    prefs.setString('cartInfo', cartString); //
-    await getCartInfo();
   }
 }

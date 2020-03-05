@@ -25,18 +25,22 @@ dependencies:
   cupertino_icons: ^0.1.2
   english_words: ^3.1.5
 #  flutter_swiper: ^1.0.6
-  carousel_slider: ^0.0.7  #轮播图
+  carousel_slider: ^1.4.1  #轮播图
   flutter_screenutil: ^0.5.1  #自适应
   provide: ^1.0.2   #状态管理
+  cached_network_image: ^2.0.0
   shared_preferences: "^0.4.2" #数据存储
   flutter_easyrefresh: ^2.0.9  #下拉上拉刷新
   fluttertoast: ^3.1.0  #提示框
   dio: ^3.0.8  #http请求
-  fluro: "^1.5.1"  #路由管理
+#  fluro: "^1.5.1"  #路由管理
   flutter_html: ^0.11.1
   flutter_swiper: ^1.1.6
   dio_cookie_manager: ^1.0.0
   cookie_jar: ^1.0.1
+  color_dart: ^0.2.1
+  json_annotation: ^3.0.1
+path_provider: ^1.6.4
 
 dev_dependencies:
   flutter_test:

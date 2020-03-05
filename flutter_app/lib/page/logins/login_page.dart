@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../service/service_method.dart';
+import 'package:flutter_app/service/service_method.dart';
 import 'package:provide/provide.dart';
-import '../../provide/currentIndex.dart';
-import '../../config/common.dart';
+import 'package:flutter_app/provide/currentIndex.dart';
+import 'package:flutter_app/config/common.dart';
 import 'dart:convert';
-
+import 'package:flutter_app/utils/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app/request/Api.dart';
 class LoginPage extends StatefulWidget {
   Map arguments;
 
@@ -25,6 +29,7 @@ class LoginPageState extends State<LoginPage> {
   var password;
   var captcha;
   var nowtime = new DateTime.now().millisecondsSinceEpoch;
+  SharedPreferences prefs;
 
   LoginPageState({this.arguments});
 
@@ -164,22 +169,7 @@ class LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(25.0),
                             ),
                             onPressed: () {
-                              var formData = {
-//                                'username': this.username,
-//                                'captcha': this.captcha,
-//                                'password': this.password
-                                'username': 'RU_000002',
-                                'captcha': '123123',
-                                'password': '123456'
-                              };
-                              request('Shop-Login-login', formData: formData)
-                                  .then((val) {
-                                print(val);
-                                if (val['status'] == 0) {
-                                  getUserInfo(context);
-                                  Navigator.pushNamed(context, '/');
-                                }
-                              });
+                              login();
                             },
                           ),
                         ),
@@ -196,23 +186,71 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void getUserInfo(context) async {
+//登陆后获取用户个人信息
+//  void getUserInfo(context, data) async {
+//    var result = await G.req.index.login(data);
+//    Map val = result.data;
+//    if (val['status'] == 0) {
+//      saveisLogin('isLogin', true);
+//      await Provide.value<CurrentIndexProvide>(context).changelogin();
+//      Navigator.pop(context);
+//    }
+//  }
+//  登录
+  login() async {
+    if (this.username == null) {
+      return G.toast('用户名不能为空');
+    }
+    if (this.password == null) {
+      return G.toast('密码不能为空');
+    }
+    if (this.captcha == null) {
+      return G.toast('验证码不能为空');
+    }
 
-    saveisLogin('isLogin', true);
-
-    await request('User-Profile-index').then((val) {
+    /// 登录前移除user， 不然登录会提示token错误
+//    prefs.remove('user');
+    var data = {
+        'username': this.username,
+        'captcha': this.captcha,
+        'password': this.password
+//      'username': 'RU_000002',
+//      'captcha': '123123',
+//      'password': '123456'
+    };
+    try {
+      G.loading.show(context);
+      List<Cookie> cookies = [];
+      var result = await G.req.index.login(data);
+      var val = result.data;
+      cookies = (await Api.cookieJar).loadForRequest(Uri.parse(G.url+'/m/login/login'));
+      (await Api.cookieJar).saveFromResponse(Uri.parse(G.url+'/m/login/login'),cookies);
       if (val['status'] == 0) {
-        Provide.value<CurrentIndexProvide>(context).changeUserinfo(val['data']["user"]);
-//        formSave('user', json.encode(val['data']["user"]));
+        await Provide.value<CurrentIndexProvide>(context).changelogin(true);
+        await getUserDetail();
+        await G.toast('登录成功');
+
+//        G.pushNamed('/mine')
+              G.loading.hide(context);
+        Navigator.pop(context);
       }
-    });
+    } catch (e) {
+      G.toast('登录');
+    }
+  }
+
+//  获取用户信息
+  getUserDetail() async {
+    var res = await G.req.user.index();
+    var data = res.data;
+    Map json = data['data']['user'];
+    G.user.init(json);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    formClean();
   }
 
   @override

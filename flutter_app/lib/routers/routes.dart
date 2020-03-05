@@ -9,13 +9,13 @@ import '../page/product/product_page.dart';
 import '../page/search.dart';
 
 final routers = {
-  '/': (context,{arguments}) => IndexPage(),
   '/login': (context, {arguments}) => LoginPage(arguments: arguments),
   '/sigin': (context, {arguments}) => SiginPage(arguments: arguments),
   '/forget': (context, {arguments}) => ForgetPage(arguments: arguments),
   '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   '/product': (context, {arguments}) => ProductPage(arguments: arguments),
-  '/cart': (context, {arguments}) => CartPage(arguments: arguments),
+  '/cart': (context) => CartPage(),
+  '/': (context) => IndexPage(),
 };
 
 var  onGenerateRoute = (RouteSettings settings) {

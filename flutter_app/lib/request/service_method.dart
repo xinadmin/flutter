@@ -16,6 +16,8 @@ Future request(url, {formData}) async {
     dio.interceptors.add(CookieManager(cookieJar));
     dio.options.headers = httpHeaders;
 
+//    print(cookieJar.loadForRequest(Uri.parse(serviceUrl + servicePath[url])));
+    print(serviceUrl + servicePath[url]);
     if (formData == null) {
       response = await dio.post(serviceUrl + servicePath[url]);
     } else {
@@ -30,4 +32,3 @@ Future request(url, {formData}) async {
     return print('ERROR:======>${e}');
   }
 }
-

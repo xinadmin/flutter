@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:core';
+import 'package:cached_network_image/cached_network_image.dart';
 
 //美元转化
 String tranFrom(var val) {
@@ -30,7 +31,6 @@ formSave(var key, var value) async {
 Future<String> formGet(String key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String item = prefs.getString(key);
-  print(item);
   return item;
 }
 
@@ -74,4 +74,15 @@ String changeImg(item) {
     item.replace(RegExp(reg1), 'src="' + baseurl + '"');
     return item;
   }
+}
+
+CachedNetworkImage getCacheImage(
+    {String imageUrl, BoxFit fit, double width, double height}) {
+  return CachedNetworkImage(
+    imageUrl: imageUrl,
+    fit: fit,
+    fadeInDuration: Duration(milliseconds: 300),
+    width: width,
+    height: height,
+  );
 }

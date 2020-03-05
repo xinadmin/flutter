@@ -5,7 +5,6 @@ import 'product_banner.dart';
 import 'product_detail.dart';
 import 'product_bottom.dart';
 
-import '../../config/common.dart';
 class ProductPage extends StatefulWidget {
   @override
   Map arguments;
@@ -28,7 +27,6 @@ class ProductPageState extends State<ProductPage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              print('返回上一页');
               Navigator.pop(context);
             },
           ),
@@ -44,10 +42,6 @@ class ProductPageState extends State<ProductPage> {
                       children: <Widget>[
                         ProductBanner(),
                         ProductDeatail(),
-//                        DetailsTopArea(),
-//                        DetailsExplain(),
-//                        DetailsTabBar(),
-//                        DetailsWeb(),
                       ],
                     ),
                     Positioned(
@@ -110,3 +104,4 @@ class ProductPageState extends State<ProductPage> {
 
   }
 }
+

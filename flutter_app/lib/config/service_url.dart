@@ -55,6 +55,10 @@ const servicePath={
   'User-profile-changepassword':'/u/profile/changepassword',
   'User-profile-changesecuritypassword':'/u/profile/changesecuritypassword',
   'User-User-issignin': '/u/user/issignin',
-  'User-User-usersignin': '/u/user/usersignin'
+  'User-User-usersignin': '/u/user/usersignin',
+  'User-Order-list':'/u/order/list',
+  'User-Order-detail':'/u/order/detail',
+
+
 };
 
