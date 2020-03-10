@@ -393,7 +393,7 @@ class SureDialogState extends State<SureDialog> {
         );
     }else {
       return Container(
-          child: ButtonContent(context, () {
+          child: ButtonContent(context, () async {
             if(!isLogin){
               Navigator.pushNamed(context,'/login');
               return ;
@@ -403,20 +403,13 @@ class SureDialogState extends State<SureDialog> {
               'goods_number': num.text,
               'type': 'buyNow'
             };
-            request('Shop-cart-join', formData: formData).then((val) {
+            var result = await G.req.cart.join(formData);
+            Map val = result.data;
               if (val['status'] == 0) {
-                Fluttertoast.showToast(
-                    msg: val['messages'],
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-                Navigator.pop(context);
+                Navigator.pushNamed(context, '/createdOrderPage');
+              }else {
+                G.toast(val['messages']);
               }
-            });
           }, '立即购买'),
       );
     }

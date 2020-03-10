@@ -260,9 +260,9 @@ class MainContentState extends State<MainContent>
               items: this.adver.length > 0
                   ? this._getAdv()
                   : this._getAdvExample(),
-              height: ScreenUtil().setHeight(380),
+              height: ScreenUtil().setHeight(400),
               autoPlay: true,
-              aspectRatio: 2.0,
+//              aspectRatio: 2.0,
               viewportFraction:1.0,
               onPageChanged: (index) {
                 setState(() {
@@ -279,7 +279,7 @@ class MainContentState extends State<MainContent>
   Widget advcontent() {
     if (this.adver1['ad_image'] == "") {
       return Container(
-        height: 100.0,
+        height: ScreenUtil().setHeight(165.0),
         margin: EdgeInsets.all(20.0),
         color: Colors.black12,
       );
@@ -291,7 +291,6 @@ class MainContentState extends State<MainContent>
           child: Image.network(
             this.url + this.adver1['ad_image'],
             fit: BoxFit.cover,
-//          height: 80.0,
             alignment: Alignment.center,
           ),
         ));

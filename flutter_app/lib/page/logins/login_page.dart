@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:flutter_app/utils/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/request/Api.dart';
+
 class LoginPage extends StatefulWidget {
   Map arguments;
 
@@ -42,7 +43,11 @@ class LoginPageState extends State<LoginPage> {
         child: Column(
           children: <Widget>[
             Container(
-                margin: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                margin: EdgeInsets.fromLTRB(
+                    ScreenUtil().setWidth(20),
+                    ScreenUtil().setWidth(40),
+                    ScreenUtil().setWidth(40),
+                    ScreenUtil().setWidth(40)),
                 alignment: Alignment.bottomLeft,
                 child: InkWell(
                   onTap: () {
@@ -51,16 +56,15 @@ class LoginPageState extends State<LoginPage> {
                   child: Icon(
                     Icons.arrow_back,
                     color: Color.fromRGBO(106, 106, 106, 1),
-                    size: 33.0,
+                    size: ScreenUtil().setSp(45),
                   ),
                 )),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.all(10.0),
+              margin: EdgeInsets.all(ScreenUtil().setWidth(20)),
               child: Image.network(
                 'https://panda36.com/static/panda36/assets/img/m/main.png',
-//              height: 140.0,
-                width: 340.0,
+                width: ScreenUtil().setWidth(680),
                 fit: BoxFit.cover,
               ),
             ),
@@ -68,7 +72,11 @@ class LoginPageState extends State<LoginPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    margin: EdgeInsets.fromLTRB(
+                        ScreenUtil().setWidth(40),
+                        ScreenUtil().setWidth(20),
+                        ScreenUtil().setWidth(40),
+                        0),
                     child: TextField(
                       decoration: InputDecoration(hintText: '请输入用户名'),
                       onChanged: (value) {
@@ -79,7 +87,11 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    margin: EdgeInsets.fromLTRB(
+                        ScreenUtil().setWidth(40),
+                        ScreenUtil().setWidth(20),
+                        ScreenUtil().setWidth(40),
+                        0),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -104,7 +116,7 @@ class LoginPageState extends State<LoginPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Color.fromRGBO(106, 106, 106, 1),
-                                    fontSize: 18.0),
+                                    fontSize: ScreenUtil().setSp(32)),
                               ),
                               onTap: () {
                                 Navigator.pushNamed(context, '/forget');
@@ -134,10 +146,10 @@ class LoginPageState extends State<LoginPage> {
                             flex: 2,
                             child: GestureDetector(
                               child: Image.network(
-                                'http://192.168.10.100/m/captcha/getCaptcha?timeamp=' +
+                                'https://panda36.com/m/captcha/getCaptcha?timeamp=' +
                                     this.nowtime.toString(),
                                 fit: BoxFit.cover,
-                                height: 50.0,
+                                height: ScreenUtil().setHeight(88),
                               ),
                               onTap: () {
                                 setState(() {
@@ -154,19 +166,23 @@ class LoginPageState extends State<LoginPage> {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          height: 50.0,
-                          margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          height: ScreenUtil().setHeight(90),
+                          margin: EdgeInsets.fromLTRB(
+                              ScreenUtil().setWidth(40),
+                              ScreenUtil().setWidth(40),
+                              ScreenUtil().setWidth(40),
+                              0),
                           child: RaisedButton(
                             child: Text(
                               '登陆',
                               style: TextStyle(
-                                fontSize: 18.0,
+                                fontSize: ScreenUtil().setSp(28),
                                 color: Colors.white,
                               ),
                             ),
                             color: Color.fromRGBO(237, 71, 51, 1),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
                             onPressed: () {
                               login();
@@ -175,6 +191,26 @@ class LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
+                  ),
+                  Container(
+                    height: ScreenUtil().setHeight(90),
+                    margin: EdgeInsets.fromLTRB(
+                        ScreenUtil().setWidth(40),
+                        ScreenUtil().setWidth(40),
+                        ScreenUtil().setWidth(40),
+                        0),
+                    child: InkWell(
+                      child: Text(
+                        '注册',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(34),
+                          color: Colors.black38,
+                        ),
+                      ),
+                      onTap: (){
+                        Navigator.pushNamed(context, '/sigin');
+                      },
+                    ),
                   )
                 ],
               ),
@@ -186,16 +222,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-//登陆后获取用户个人信息
-//  void getUserInfo(context, data) async {
-//    var result = await G.req.index.login(data);
-//    Map val = result.data;
-//    if (val['status'] == 0) {
-//      saveisLogin('isLogin', true);
-//      await Provide.value<CurrentIndexProvide>(context).changelogin();
-//      Navigator.pop(context);
-//    }
-//  }
 //  登录
   login() async {
     if (this.username == null) {
@@ -211,9 +237,9 @@ class LoginPageState extends State<LoginPage> {
     /// 登录前移除user， 不然登录会提示token错误
 //    prefs.remove('user');
     var data = {
-        'username': this.username,
-        'captcha': this.captcha,
-        'password': this.password
+      'username': this.username,
+      'captcha': this.captcha,
+      'password': this.password
 //      'username': 'RU_000002',
 //      'captcha': '123123',
 //      'password': '123456'
@@ -223,18 +249,22 @@ class LoginPageState extends State<LoginPage> {
       List<Cookie> cookies = [];
       var result = await G.req.index.login(data);
       var val = result.data;
-      cookies = (await Api.cookieJar).loadForRequest(Uri.parse(G.url+'/m/login/login'));
-      (await Api.cookieJar).saveFromResponse(Uri.parse(G.url+'/m/login/login'),cookies);
+      cookies = (await Api.cookieJar)
+          .loadForRequest(Uri.parse(G.url + '/m/login/login'));
+      (await Api.cookieJar)
+          .saveFromResponse(Uri.parse(G.url + '/m/login/login'), cookies);
       if (val['status'] == 0) {
         await Provide.value<CurrentIndexProvide>(context).changelogin(true);
         await getUserDetail();
         await G.toast('登录成功');
-
-//        G.pushNamed('/mine')
-              G.loading.hide(context);
+        G.loading.hide(context);
         Navigator.pop(context);
+      }else {
+        G.loading.hide(context);
+        await G.toast(val.messages);
       }
     } catch (e) {
+      G.loading.hide(context);
       G.toast('登录');
     }
   }

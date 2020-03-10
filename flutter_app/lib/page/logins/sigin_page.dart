@@ -25,7 +25,7 @@ class SiginPageState extends State<SiginPage> {
   var captcha;
   var realname;
   var phone;
-
+  var nowtime = new DateTime.now().millisecondsSinceEpoch;
   SiginPageState({this.arguments});
 
   Widget build(BuildContext context) {
@@ -40,10 +40,15 @@ class SiginPageState extends State<SiginPage> {
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
-          leading: Icon(
-            Icons.arrow_back,
-            color: Color.fromRGBO(106, 106, 106, 1),
-          )),
+          leading:  IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Color.fromRGBO(85, 85, 85, 1),
+            padding: EdgeInsets.all(0),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -54,7 +59,11 @@ class SiginPageState extends State<SiginPage> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         decoration: InputDecoration(hintText: '请填写你的真实姓名'),
                         onChanged: (value) {
@@ -65,7 +74,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         decoration: InputDecoration(hintText: '请填写你的手机号'),
                         onChanged: (value) {
@@ -76,7 +89,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         decoration: InputDecoration(hintText: '请填写你的电子邮箱'),
                         onChanged: (value) {
@@ -87,7 +104,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         obscureText: true,
                         decoration:
@@ -100,7 +121,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(hintText: '请再次输入登录密码'),
@@ -112,7 +137,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         obscureText: true,
                         decoration:
@@ -125,7 +154,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(hintText: '请再次输入安全密码'),
@@ -137,7 +170,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: TextField(
                         decoration: InputDecoration(hintText: '请输入推荐人id'),
                         onChanged: (value) {
@@ -148,7 +185,11 @@ class SiginPageState extends State<SiginPage> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      margin: EdgeInsets.fromLTRB(
+                          ScreenUtil().setWidth(40),
+                          ScreenUtil().setWidth(20),
+                          ScreenUtil().setWidth(40),
+                          0),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -168,12 +209,16 @@ class SiginPageState extends State<SiginPage> {
                               flex: 2,
                               child: GestureDetector(
                                 child: Image.network(
-                                  'http://panda36.com/m/captcha/getCaptcha?timeamp=1581177033525',
+                                  'https://panda36.com/m/captcha/getCaptcha?timeamp=' +
+                                      this.nowtime.toString(),
                                   fit: BoxFit.cover,
                                   height: 48.0,
                                 ),
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/forget');
+                                  setState(() {
+                                    this.nowtime =
+                                        new DateTime.now().millisecondsSinceEpoch;
+                                  });
                                 },
                               )),
                         ],
@@ -222,13 +267,13 @@ class SiginPageState extends State<SiginPage> {
                         Expanded(
                           flex: 1,
                           child: Container(
-                            height: 50.0,
-                            margin: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                            height: ScreenUtil().setHeight(90),
+                            margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(40), ScreenUtil().setWidth(40), ScreenUtil().setWidth(40), ScreenUtil().setWidth(20)),
                             child: RaisedButton(
                               child: Text(
                                 '登陆',
                                 style: TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: ScreenUtil().setSp(28),
                                   color: Colors.white,
                                 ),
                               ),

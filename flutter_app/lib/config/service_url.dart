@@ -1,4 +1,4 @@
-const serviceUrl= 'http://192.168.10.100';
+const serviceUrl= 'https://panda36.com';
 
 //const serviceUrl= 'https://panda36.com';
 //const serviceUrl= 'http://test.baixingliangfan.cn/baixing/';

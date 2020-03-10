@@ -27,7 +27,7 @@ class G {
 //  static String handleGoodsDesc(String str) {
 //    return str.replaceAll(RegExp(',\$'), '').replaceAll(RegExp('规格:|温度:|糖度:|奶油:|无'), '');
 //  }
-  static final url = 'http://192.168.10.100';
+  static final url = 'https://panda36.com';
   /// 初始化request
   static final Request req = Request();
 //

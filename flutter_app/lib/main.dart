@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:provide/provide.dart';
-import 'package:flutter_app/provide/child_category.dart';
+//import 'package:flutter _app/provide/child_category.dart';
 import 'package:flutter_app/provide/category_goods_list.dart';
 import 'package:flutter_app/provide/details_info.dart';
 import 'package:flutter_app/provide/cart.dart';
@@ -18,7 +18,7 @@ import 'package:flutter_app/request/Api.dart';
 import 'package:flutter_app/config/common.dart';
 
 void main() {
-  var childCategory = ChildCategory();
+//  var childCategory = ChildCategory();
   var categoryGoodsListProvide = CategoryGoodsListProvide();
   var detailsInfoProvide = DetailsInfoProvide();
   var cartProvide = CartProvide();
@@ -27,7 +27,7 @@ void main() {
   var providers = Providers();
 
   providers
-    ..provide(Provider<ChildCategory>.value(childCategory))
+//    ..provide(Provider<ChildCategory>.value(childCategory))
     ..provide(
         Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
     ..provide(Provider<DetailsInfoProvide>.value(detailsInfoProvide))

@@ -30,7 +30,7 @@ Dio initDio() {
             return options;
           },
           onResponse: (Response response) async {
-            print(response.data);
+//            print(response.data);
             return response;
           },
           onError: (DioError e) async {

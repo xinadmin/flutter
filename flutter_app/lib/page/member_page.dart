@@ -11,7 +11,7 @@ import 'package:flutter_app/provide/currentIndex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MemberPage extends StatelessWidget {
-  var url = "http://192.168.10.100";
+  var url = "https://panda36.com";
 
   UserData userData = G.user.data;
 
@@ -33,7 +33,9 @@ class MemberPage extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(Icons.settings),
                     color: hex('#ffffff'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context,'/upset');
+                    },
                   ),
                 )
               ],
@@ -84,7 +86,7 @@ class MemberPage extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  '100',
+                  '10',
                   style: TextStyle(color: hex('#ffffff')),
                 ),
                 Text(
@@ -103,7 +105,7 @@ class MemberPage extends StatelessWidget {
                   style: TextStyle(color: hex('#ffffff')),
                 ),
                 Text(
-                  '收藏',
+                  '分享',
                   style: TextStyle(color: hex('#ffffff')),
                 ),
               ],
@@ -163,6 +165,7 @@ class MemberPage extends StatelessWidget {
                 Icon(
                   Icons.party_mode,
                   size: 30,
+                  color: hex("#ec3838"),
                 ),
                 Text('待付款'),
               ],
@@ -176,6 +179,8 @@ class MemberPage extends StatelessWidget {
                 Icon(
                   Icons.query_builder,
                   size: 30,
+                  color: hex("#ec3838"),
+
                 ),
                 Text('待发货'),
               ],
@@ -189,6 +194,8 @@ class MemberPage extends StatelessWidget {
                 Icon(
                   Icons.directions_car,
                   size: 30,
+                  color: hex("#ec3838"),
+
                 ),
                 Text('待收货'),
               ],
@@ -201,6 +208,8 @@ class MemberPage extends StatelessWidget {
                 Icon(
                   Icons.content_paste,
                   size: 30,
+                  color: hex("#ec3838"),
+
                 ),
                 Text('待评价'),
               ],
@@ -229,28 +238,28 @@ class MemberPage extends StatelessWidget {
     );
   }
 
-  Widget _myListTile(String title) {
+  Widget _myListTile(String title,String point) {
     return Container(
       width: ScreenUtil().setWidth(175),
       padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(30)),
       child: Column(
         children: <Widget>[
           Text(
-            '12345.00',
+            point,
             style: TextStyle(
                 color: hex(
                   '#ec3838',
                 ),
                 fontSize: ScreenUtil().setSp(35)),
           ),
-          Text('(￥34324)',
+          Text('(￥'+point+')',
               style: TextStyle(
                   color: hex(
                     '#333333',
                   ),
                   fontSize: ScreenUtil().setSp(30))),
           Text(
-            '安徽省多久啊是',
+            title,
             style: TextStyle(
                 color: hex(
                   '#333333',
@@ -278,10 +287,11 @@ class MemberPage extends StatelessWidget {
           Container(
             child: Row(
               children: <Widget>[
-                _myListTile('132412'),
-                _myListTile('领取优惠券'),
-                _myListTile('领取优惠券'),
-                _myListTile('领取优惠券'),
+                _myListTile('现金积分',userData.award_integral),
+                _myListTile('奖励积分',userData.award_integral),
+                _myListTile('待返还积分',userData.award_integral),
+                _myListTile('pv',userData.award_integral),
+
               ],
             ),
           ),
@@ -306,9 +316,9 @@ class MemberPage extends StatelessWidget {
             padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(20)),
             child: Row(
               children: <Widget>[
-                settitle(Icons.edit_location, 'asdasdsa', hex('#46D661')),
-                settitle(Icons.edit_location, 'asdasdsa', hex('#46D661')),
-                settitle(Icons.edit_location, 'asdasdsa', hex('#0d96f7')),
+                settitle(Icons.edit_location, '代理中心', hex('#ec3838')),
+                settitle(Icons.thumbs_up_down, '推广', hex('#46D661')),
+                settitle(Icons.stars, '设置', hex('#0d96f7')),
               ],
             ),
           ),
@@ -323,7 +333,7 @@ class MemberPage extends StatelessWidget {
       alignment: Alignment.center,
       child: Column(
         children: <Widget>[
-          Icon(icon, color: color, size: ScreenUtil().setSp(88)),
+          Icon(icon, color: color, size: ScreenUtil().setSp(78)),
           Padding(
             padding: EdgeInsets.only(top: 4),
             child: Text(title),
@@ -355,23 +365,24 @@ class MemberPage extends StatelessWidget {
               color: Colors.transparent,
               border: G.borderBottom(show: false),
               padding: EdgeInsets.all(0),
-//              leftChild: ClipRRect(
-//                borderRadius: new BorderRadius.circular(27),
-//                child: Image.network(
+              leftChild: ClipRRect(
+                borderRadius: new BorderRadius.circular(27),
+                child: Image.network(
 //                  userData.profile_avatar == null
-//                      ? 'https://panda36.com/static/panda36/assets/img/touxianggray.png'
+//                      ?
+                'https://panda36.com/static/panda36/assets/img/touxianggray.png',
 //                      : url + userData.profile_avatar,
-//                  width: ScreenUtil().setWidth(99),
-//                  height: ScreenUtil().setHeight(99),
-//                  fit: BoxFit.cover,
-//                ),
-//              ),
-              leftChild: Text(
-                userData.username,
-                style: TextStyle(
-                    color: rgba(255, 255, 255, 1),
-                    fontSize: ScreenUtil().setSp(48)),
+                  width: ScreenUtil().setWidth(99),
+                  height: ScreenUtil().setHeight(99),
+                  fit: BoxFit.cover,
+                ),
               ),
+//              leftChild: Text(
+//                userData.username,
+//                style: TextStyle(
+//                    color: rgba(255, 255, 255, 1),
+//                    fontSize: ScreenUtil().setSp(48)),
+//              ),
               centerChild: Container(
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
