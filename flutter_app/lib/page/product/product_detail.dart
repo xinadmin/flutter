@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_app/utils/global.dart';
 import 'package:flutter_app/jsonserialize/user/data.dart';
 //商品详情页的首屏区域，包括图片、商品名称，商品价格，商品编号的UI展示
-var url = "https://panda36.com";
 var num = 1;
 
 class ProductDeatail extends StatelessWidget {
@@ -36,43 +35,43 @@ class ProductDeatail extends StatelessWidget {
                 child: Text(
                   goodsInfo['localeGoodsName'],
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: ScreenUtil().setSp(36),
                     color: Color.fromRGBO(48, 49, 51, 1),
                   ),
                 ),
                 color: Colors.white,
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(30), 0, ScreenUtil().setWidth(30), ScreenUtil().setHeight(10)),
               ),
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(30), 0, ScreenUtil().setWidth(30), ScreenUtil().setHeight(10)),
                 child: Row(
                   children: <Widget>[
                     Text(
-                      'Цена товара：',
+                      'Цена товара:',
                       style: TextStyle(
-                        fontSize: 14.0,
+                        fontSize: ScreenUtil().setSp(28),
                         color: Color.fromRGBO(236, 56, 56, 1),
                       ),
                     ),
                     Text(
                       tranFrom(attr[index]['goods_price']),
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: ScreenUtil().setSp(36),
                         color: Color.fromRGBO(236, 56, 56, 1),
                       ),
                     ),
                     Text(
-                      '(БАЛЛОВ：',
+                      '(БАЛЛОВ:',
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: ScreenUtil().setSp(34),
                         color: Color.fromRGBO(48, 49, 51, 1),
                       ),
                     ),
                     Text(
                       attr[index]['goods_price'] + '）',
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: ScreenUtil().setSp(32),
                         color: Color.fromRGBO(48, 49, 51, 1),
                       ),
                     ),
@@ -88,7 +87,7 @@ class ProductDeatail extends StatelessWidget {
                       child: Text(
                         'Объем продаж: ' + attr[index]['sales_sum'],
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: ScreenUtil().setSp(32),
                           color: Color.fromRGBO(144, 147, 153, 1),
                         ),
                       ),
@@ -99,7 +98,7 @@ class ProductDeatail extends StatelessWidget {
                       child: Text(
                         'Запас:' + attr[index]['inventory_quantity'],
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: ScreenUtil().setSp(32),
                           color: Color.fromRGBO(144, 147, 153, 1),
                         ),
                         textAlign: TextAlign.right,
@@ -113,11 +112,11 @@ class ProductDeatail extends StatelessWidget {
               _otherPoint(context, attr),
               _spec(checkvalue),
               SizedBox(
-                height: 10.0,
+                height: ScreenUtil().setHeight(20),
               ),
               _goodsparms(context:context,goodsParam:goodsParam),
               SizedBox(
-                height: 10.0,
+                height: ScreenUtil().setHeight(20),
               ),
               Container(
                 color: Colors.white,
@@ -128,11 +127,11 @@ class ProductDeatail extends StatelessWidget {
                         'Описание товара',
                         style: TextStyle(
                           color: Color.fromRGBO(236, 56, 56, 1),
-                          fontSize: 22.0,
+                          fontSize:  ScreenUtil().setSp(40),
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      padding: EdgeInsets.fromLTRB(0,  ScreenUtil().setHeight(20), 0, ScreenUtil().setHeight(20)),
                     ),
                     Html(
                       data: goodsInfo["localeGoodsDesc"],
@@ -172,14 +171,14 @@ class ProductDeatail extends StatelessWidget {
           title: Text(
             'Характеристики продукта',
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: ScreenUtil().setSp(36),
               color: Color.fromRGBO(96, 98, 102, 1),
             ),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
             color: Color.fromRGBO(136, 136, 136, 1),
-            size: 17.0,
+            size: ScreenUtil().setSp(34),
           ),),
       ),
 
@@ -190,7 +189,7 @@ class ProductDeatail extends StatelessWidget {
       return Column(
         children: <Widget>[
           SizedBox(
-            height: 10.0,
+            height: ScreenUtil().setWidth(20),
           ),
           Container(
             color: Colors.white,
@@ -198,7 +197,7 @@ class ProductDeatail extends StatelessWidget {
               title: Text(
                 'Выбранные：' + checkvalue.toString(),
                 style: TextStyle(
-                  fontSize: 18.0,
+                  fontSize: ScreenUtil().setSp(36),
                   color: Color.fromRGBO(96, 98, 102, 1),
                 ),
               ),
@@ -220,7 +219,7 @@ class ProductDeatail extends StatelessWidget {
         .isLogin;
     if (!isLogin) {
       return Container(
-        height: 2.0,
+        height: ScreenUtil().setHeight(4),
         color: Colors.white,
       );
     } else {
@@ -251,16 +250,16 @@ class ProductDeatail extends StatelessWidget {
     if (level == 0) {
       if (isshow == 0) {
         return Container(
-          width: ScreenUtil().setWidth(1250),
+          width: ScreenUtil().setWidth(750),
           child: Text(
             subtitle + ': ' + item[index][title].toString(),
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: ScreenUtil().setSp(32),
               color: Color.fromRGBO(144, 147, 153, 1),
             ),
           ),
           color: Colors.white,
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+          padding: EdgeInsets.fromLTRB( ScreenUtil().setWidth(30), 0, ScreenUtil().setWidth(30), ScreenUtil().setHeight(10)),
         );
       } else {
         return SizedBox(
@@ -269,16 +268,16 @@ class ProductDeatail extends StatelessWidget {
       }
     } else {
       return Container(
-        width: ScreenUtil().setWidth(1250),
+        width: ScreenUtil().setWidth(750),
         child: Text(
           subtitle + ': ' + item[index][title].toString(),
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize:  ScreenUtil().setSp(32),
             color: Color.fromRGBO(144, 147, 153, 1),
           ),
         ),
         color: Colors.white,
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        padding: EdgeInsets.fromLTRB( ScreenUtil().setHeight(30), 0, ScreenUtil().setHeight(30), 10),
       );
     }
   }

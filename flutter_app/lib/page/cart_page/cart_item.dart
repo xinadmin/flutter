@@ -14,7 +14,6 @@ class CartItem extends StatelessWidget {
   final CartInfoMode item;
   CartItem(this.item);
 
-  var url = "http://192.168.10.100";
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +63,7 @@ class CartItem extends StatelessWidget {
                     )
                   ]),
               child:
-                  Image.network(url + item.goods_image, fit: BoxFit.cover),
+                  Image.network(G.url + item.goods_image, fit: BoxFit.cover),
 //              getCacheImage(imageUrl:url + item['goods_image'], width:ScreenUtil().setWidth(170),height:ScreenUtil().setHeight(170))
             ),
           ),
@@ -88,7 +87,8 @@ class CartItem extends StatelessWidget {
                 onPressed: () {
                   var login =
                       Provide.value<CurrentIndexProvide>(context).isLogin;
-                  if (login) {
+                  G.toast(login.toString());
+;                  if (login) {
                     Provide.value<CartProvide>(context).changeCheckState(item);
                   }
                 },

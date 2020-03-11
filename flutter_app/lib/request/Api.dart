@@ -11,7 +11,6 @@ class Api {
     if (_cookieJar == null) {
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
-     print('获取的文件系统目录 appDocPath： ' + appDocPath);
       _cookieJar = new PersistCookieJar(dir: appDocPath);
     }
     return _cookieJar;

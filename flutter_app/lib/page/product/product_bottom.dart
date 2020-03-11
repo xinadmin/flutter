@@ -29,8 +29,8 @@ class DetailsBottomState extends State<DetailsBottom> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         width: ScreenUtil().setWidth(670),
-        margin: EdgeInsets.fromLTRB(25, 0, 25, 0),
-        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+        margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(50), 0, ScreenUtil().setWidth(50), 0),
+        padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), 0, ScreenUtil().setWidth(10), 0),
         height: ScreenUtil().setHeight(110),
         child: Row(
           children: <Widget>[
@@ -47,14 +47,14 @@ class DetailsBottomState extends State<DetailsBottom> {
                     children: <Widget>[
                       Icon(
                         CupertinoIcons.home,
-                        size: 25,
+                        size: ScreenUtil().setSp(50),
                         color: Color.fromRGBO(144, 147, 153, 1),
                       ),
                       Text(
                         'Главная',
                         style: TextStyle(
                           color: Color.fromRGBO(144, 147, 153, 1),
-                          fontSize: 15.0,
+                          fontSize: ScreenUtil().setSp(30),
                         ),
                       ),
                     ],
@@ -66,21 +66,21 @@ class DetailsBottomState extends State<DetailsBottom> {
               },
               child: Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
+                  padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(6), 0, ScreenUtil().setWidth(6), 0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Icon(
                         Icons.shopping_cart,
-                        size: 25,
+                        size: ScreenUtil().setSp(50),
                         color: Color.fromRGBO(144, 147, 153, 1),
                       ),
                       Text(
                         'Корзина',
                         style: TextStyle(
                           color: Color.fromRGBO(144, 147, 153, 1),
-                          fontSize: 15.0,
+                          fontSize: ScreenUtil().setSp(30),
                         ),
                       ),
                     ],
@@ -93,7 +93,7 @@ class DetailsBottomState extends State<DetailsBottom> {
                   Color.fromRGBO(250, 67, 106, 1),
                   Color.fromRGBO(245, 108, 108, 1)
                 ]),
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: BorderRadius.circular(30.0),
               ),
               child: Row(
                 children: <Widget>[
@@ -106,8 +106,8 @@ class DetailsBottomState extends State<DetailsBottom> {
                     child: Container(
                       alignment: Alignment.center,
                       width: ScreenUtil().setWidth(200),
-                      height: ScreenUtil().setHeight(80),
-                      padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      height: ScreenUtil().setHeight(75),
+                      padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(24), 0, ScreenUtil().setWidth(24), 0),
                       child: Text(
                         'Купить сейчас',
                         style: TextStyle(
@@ -121,13 +121,12 @@ class DetailsBottomState extends State<DetailsBottom> {
                   InkWell(
                     onTap: () {
                       _showDialog(attr: attr, index: 1,isbuy:'cart');
-//              await Provide.value<CartProvide>(context).remove();
                     },
                     child: Container(
                       alignment: Alignment.center,
                       width: ScreenUtil().setWidth(200),
-                      height: ScreenUtil().setHeight(80),
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      height: ScreenUtil().setHeight(75),
+                      padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
                       child: Text(
                         'Добавить в корзину',
                         style: TextStyle(

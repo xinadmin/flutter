@@ -19,7 +19,7 @@ class MemberPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getUserDetail();
+//    getUserDetail();
     return Scaffold(
         appBar: new PreferredSize(
           child: new Container(
@@ -374,7 +374,7 @@ class MemberPage extends StatelessWidget {
 //                      : url + userData.profile_avatar,
                   width: ScreenUtil().setWidth(99),
                   height: ScreenUtil().setHeight(99),
-                  fit: BoxFit.cover,
+//                  fit: BoxFit.cover,
                 ),
               ),
 //              leftChild: Text(

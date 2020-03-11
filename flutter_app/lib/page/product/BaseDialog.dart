@@ -22,7 +22,6 @@ class SureDialog extends StatefulWidget {
 
 class SureDialogState extends State<SureDialog> {
   @override
-  var url = "https://panda36.com";
   Map series = {};
   int isSelectDiglog = 1;
   var goodsParam;
@@ -60,14 +59,14 @@ class SureDialogState extends State<SureDialog> {
           Container(
               child: Container(
                 width: ScreenUtil().setWidth(750),
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
                 alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(top: 5),
+                margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
                 child: Column(
                   children: <Widget>[
                     Container(
                       alignment: Alignment.topLeft,
-                      padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                      padding: EdgeInsets.fromLTRB(0,  ScreenUtil().setHeight(6), 0, ScreenUtil().setHeight(6)),
                       child: Text(
                         key,
                         style: TextStyle(
@@ -101,14 +100,14 @@ class SureDialogState extends State<SureDialog> {
         list.add(
           Container(
             width: 80.0,
-            margin: EdgeInsets.fromLTRB(0, 0, 4, 4),
+            margin: EdgeInsets.fromLTRB(0, 0,  ScreenUtil().setWidth(8),  ScreenUtil().setHeight(8)),
             child: RaisedButton(
               elevation: 0,
               color:  attr[i]['selected']?Color.fromRGBO(251, 235, 238,1):Color.fromRGBO(238, 238, 238,1),
               child: Text(attr[i]['value'],
                 style: TextStyle(
                   color: attr[i]['selected']?Color.fromRGBO(236, 56, 56, 1):Colors.black,
-                  fontSize: 15.0,
+                  fontSize: ScreenUtil().setSp(30),
                 ),
               ),
               onPressed: () {
@@ -124,8 +123,8 @@ class SureDialogState extends State<SureDialog> {
   Widget NumWidget(BuildContext context, var attr) {
     return Container(
       width: ScreenUtil().setWidth(750),
-      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
-      height: 90.0,
+      padding: EdgeInsets.fromLTRB( ScreenUtil().setWidth(20),  ScreenUtil().setHeight(40),  ScreenUtil().setWidth(20), 0),
+      height:   ScreenUtil().setHeight(180),
       child: Stack(
         children: <Widget>[
           Container(
@@ -142,8 +141,8 @@ class SureDialogState extends State<SureDialog> {
             child: Wrap(
               children: <Widget>[
                 Container(
-                  width: 40.0,
-                  height: 40.0,
+                  width: ScreenUtil().setWidth(80),
+                  height:   ScreenUtil().setHeight(80),
                   alignment: Alignment.center,
                   decoration:
                   BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
@@ -165,8 +164,8 @@ class SureDialogState extends State<SureDialog> {
                   ),
                 ),
                 Container(
-                  width: 50.0,
-                  height: 40.0,
+                  width: ScreenUtil().setWidth(100),
+                  height:   ScreenUtil().setHeight(80),
                   decoration:
                   BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
                   child: TextField(
@@ -181,8 +180,8 @@ class SureDialogState extends State<SureDialog> {
                   ),
                 ),
                 Container(
-                  width: 40.0,
-                  height: 40.0,
+                  width: ScreenUtil().setWidth(80),
+                  height:   ScreenUtil().setHeight(80),
                   alignment: Alignment.center,
                   decoration:
                   BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
@@ -250,16 +249,16 @@ class SureDialogState extends State<SureDialog> {
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+              padding: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(10), 0, ScreenUtil().setHeight(10)),
               child: Text(
                 'Параметры продукта',
                 style: TextStyle(
-                    color: Color.fromRGBO(0, 0, 0, 1), fontSize: 22.0),
+                    color: Color.fromRGBO(0, 0, 0, 1), fontSize: ScreenUtil().setSp(44)),
               ),
             ),
             Container(
               width: ScreenUtil().setWidth(750),
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB( ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
               child: _getgoodsParam(context: context, goodsParam: goodsParam),
             ),
             DigButtonContent(context) //弹窗底部按钮
@@ -282,11 +281,11 @@ class SureDialogState extends State<SureDialog> {
               children: <Widget>[
                 Container(
                   child: Image.network(
-                    url + item[index]['goods_image'],
+                    G.url + item[index]['goods_image'],
                     height: ScreenUtil().setHeight(140),
                     width: ScreenUtil().setWidth(140),
                   ),
-                  margin: EdgeInsets.fromLTRB(10, 0, 15, 10),
+                  margin: EdgeInsets.fromLTRB( ScreenUtil().setWidth(30), 0,  ScreenUtil().setWidth(30),  ScreenUtil().setHeight(20)),
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -297,7 +296,7 @@ class SureDialogState extends State<SureDialog> {
                           tranFrom(item[0]['goods_price']),
                           style: TextStyle(
                             color: Color.fromRGBO(236, 56, 56, 1),
-                            fontSize: 20.0,
+                            fontSize:  ScreenUtil().setSp(40),
                           ),
                           textAlign: TextAlign.left,
                         ),
@@ -307,18 +306,18 @@ class SureDialogState extends State<SureDialog> {
                             'Запас:' + item[0]['inventory_quantity'],
                             style: TextStyle(
                               color: Color.fromRGBO(96, 98, 102, 1),
-                              fontSize: 16.0,
+                              fontSize: ScreenUtil().setSp(32),
                             ),
                             textAlign: TextAlign.left,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
+                          padding: EdgeInsets.fromLTRB(0,  ScreenUtil().setHeight(8), 0, 0),
                           child: Text(
                             'Выбранные:' + item[0]['goods_attr_value'],
                             style: TextStyle(
                               color: Color.fromRGBO(96, 98, 102, 1),
-                              fontSize: 16.0,
+                              fontSize: ScreenUtil().setSp(32),
                             ),
                             textAlign: TextAlign.left,
                           ),
@@ -423,7 +422,7 @@ class SureDialogState extends State<SureDialog> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(65.0),
       ),
-      margin: EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 14),
+      margin: EdgeInsets.only(left: ScreenUtil().setWidth(40), top: ScreenUtil().setHeight(28), right: ScreenUtil().setWidth(40), bottom: ScreenUtil().setHeight(28)),
       child: RaisedButton(
         onPressed: () {
           tap();

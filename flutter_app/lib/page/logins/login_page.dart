@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_app/service/service_method.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_app/provide/currentIndex.dart';
+import 'package:flutter_app/provide/cart.dart';
 import 'package:flutter_app/config/common.dart';
 import 'dart:convert';
 import 'package:flutter_app/utils/global.dart';
@@ -245,7 +246,7 @@ class LoginPageState extends State<LoginPage> {
 //      'password': '123456'
     };
     try {
-      G.loading.show(context);
+//      G.loading.show(context);
       List<Cookie> cookies = [];
       var result = await G.req.index.login(data);
       var val = result.data;
@@ -254,27 +255,28 @@ class LoginPageState extends State<LoginPage> {
       (await Api.cookieJar)
           .saveFromResponse(Uri.parse(G.url + '/m/login/login'), cookies);
       if (val['status'] == 0) {
-        await Provide.value<CurrentIndexProvide>(context).changelogin(true);
         await getUserDetail();
-        await G.toast('登录成功');
-        G.loading.hide(context);
-        Navigator.pop(context);
+//        G.loading.hide(context);
       }else {
-        G.loading.hide(context);
+//        G.loading.hide(context);
         await G.toast(val.messages);
       }
     } catch (e) {
-      G.loading.hide(context);
+//      G.loading.hide(context);
       G.toast('登录');
     }
   }
 
 //  获取用户信息
   getUserDetail() async {
+    await Provide.value<CurrentIndexProvide>(context).changelogin(true);
     var res = await G.req.user.index();
     var data = res.data;
     Map json = data['data']['user'];
     G.user.init(json);
+    await G.toast('登录成功');
+    Navigator.pop(context);
+    await Provide.value<CartProvide>(context).save();
   }
 
   @override

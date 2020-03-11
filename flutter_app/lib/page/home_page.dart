@@ -37,10 +37,10 @@ class MainContentState extends State<MainContent>
   var good_list2 = [];
   var good_list3 = [];
   var list = [];
+  int page = 1;
   String bgcolor = "#ffffff";
-  AnimationController controller; //动画控制器
-  CurvedAnimation curved; //曲线动画，动画插值，
-  bool forward = true;
+  ScrollController _scrollController = new ScrollController();
+  bool isPerformingRequest = false;
 
 //  首页轮播图，导航栏，广告位，楼层数据
   void _getIndex() async {
@@ -66,38 +66,33 @@ class MainContentState extends State<MainContent>
   void _getGoodsList()  async {
     var formData = {
       'id': "",
-      'page': 1,
+      'page': this.page,
       'limit': 20,
       'where_by': 'all',
       'order_by': 'default',
       'sort_asc': ""
     };
 
-      var result = await G.req.goods.goodsList(formData);
+      var result = await fakeRequest(formData);
       Map val = result.data;
       if (val['status'] == 0) {
         setState(() {
           this.list = val['data']['list'];
+          ++this.page;
         });
       }else {
         G.toast(val['messages']);
       }
+  }
+  fakeRequest(formData) async{
+    var result = await G.req.goods.goodsList(formData);
+    return result;
   }
 // 头部导航栏
   Widget TextFileWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 5.0,
-          ),
-          child: Icon(
-            Icons.ac_unit,
-            color: Colors.white,
-            size: 28.0,
-          ),
-        ),
         Expanded(
           child: Container(
             //修饰黑色背景与圆角
@@ -106,8 +101,8 @@ class MainContentState extends State<MainContent>
               borderRadius: BorderRadius.circular(6),
             ),
             alignment: Alignment.center,
-            height: 36,
-            padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+            height: ScreenUtil().setHeight(72),
+            padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0.0, 0.0, 0.0),
             child: Text(
               '请输入商品关键词',
               style: TextStyle(
@@ -119,12 +114,12 @@ class MainContentState extends State<MainContent>
         ),
         Padding(
           padding: const EdgeInsets.only(
-            left: 5.0,
+            left: 10,
           ),
           child: Icon(
-            Icons.ac_unit,
+            Icons.camera,
             color: Colors.white,
-            size: 28.0,
+            size: ScreenUtil().setSp(54),
           ),
         )
       ],
@@ -148,7 +143,7 @@ class MainContentState extends State<MainContent>
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(6)),
               child: Image.network(
-                url + value["ad_image"],
+                G.url + value["ad_image"],
                 fit: BoxFit.cover,
               ),
             ),
@@ -191,21 +186,24 @@ class MainContentState extends State<MainContent>
             children: <Widget>[
               ClipOval(
                 child: Image.network(
-                  url + value["ad_image"],
-                  fit: BoxFit.cover,
-                  height: 44.0,
-                  width: 44.0,
+                  G.url + value["ad_image"],
+                  height: ScreenUtil().setHeight(88),
+                  width: ScreenUtil().setWidth(88),
                 ),
               ),
               Text(
                 value["ad_name"],
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(28),
+                  color: hex('#303133'),
+                ),
               ),
             ],
           ),
         ),
         onTap: () {
-          Navigator.pushNamed(context, '/search', arguments: {"id": 1});
+          Navigator.pushNamed(context, '/search');
         },
       );
     });
@@ -222,14 +220,14 @@ class MainContentState extends State<MainContent>
             children: <Widget>[
               ClipOval(
                 child: Container(
-                  height: 44.0,
-                  width: 44.0,
+                  height: ScreenUtil().setHeight(88),
+                  width: ScreenUtil().setWidth(88),
                   decoration: BoxDecoration(color: Colors.black12),
                 ),
               ),
               Container(
-                height: 24.0,
-                width: 84.0,
+                height: ScreenUtil().setHeight(48),
+                width: ScreenUtil().setWidth(166),
                 margin: EdgeInsets.fromLTRB(0, 6, 0, 0),
                 decoration: BoxDecoration(color: Colors.black12),
               ),
@@ -237,7 +235,7 @@ class MainContentState extends State<MainContent>
           ),
         ),
         onTap: () {
-          Navigator.pushNamed(context, '/search', arguments: {"id": 1});
+          Navigator.pushNamed(context, '/search');
         },
       );
     });
@@ -280,7 +278,7 @@ class MainContentState extends State<MainContent>
     if (this.adver1['ad_image'] == "") {
       return Container(
         height: ScreenUtil().setHeight(165.0),
-        margin: EdgeInsets.all(20.0),
+        margin: EdgeInsets.all(ScreenUtil().setWidth(30)),
         color: Colors.black12,
       );
     }
@@ -289,7 +287,7 @@ class MainContentState extends State<MainContent>
         child: AspectRatio(
           aspectRatio: 12 / 4,
           child: Image.network(
-            this.url + this.adver1['ad_image'],
+            G.url + this.adver1['ad_image'],
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
@@ -301,7 +299,7 @@ class MainContentState extends State<MainContent>
     return Container(
       width: ScreenUtil().setWidth(750),
       height: ScreenUtil().setHeight(405),
-      padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+      padding: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(20), 0, 0),
       color: Colors.white,
       child: Column(
         children: <Widget>[
@@ -331,11 +329,11 @@ class MainContentState extends State<MainContent>
         });
       },
       child: Container(
-        width: 120.0,
-        height: 142.0,
-        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+        width: ScreenUtil().setWidth(240),
+        height: ScreenUtil().setHeight(284.0),
+        margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), 0, 0, 0),
         decoration: BoxDecoration(),
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, ScreenUtil().setHeight(10.0)),
         child: Column(
           children: <Widget>[
             Expanded(
@@ -343,7 +341,7 @@ class MainContentState extends State<MainContent>
               child: Container(
                 child: ClipRRect(
                   child: Image.network(
-                    url + this.good_list1[index]['goods_image'],
+                    G.url + this.good_list1[index]['goods_image'],
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -352,29 +350,29 @@ class MainContentState extends State<MainContent>
             Expanded(
               flex: 1,
               child: Container(
-                height: 20.0,
-                padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                height: ScreenUtil().setHeight(40.0),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(6.0), 0, 0, 0),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   this.good_list1[index]["locale_goods_name"],
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: TextStyle(
-                      color: Color.fromRGBO(48, 49, 51, 1), fontSize: 14.0),
+                      color: Color.fromRGBO(48, 49, 51, 1), fontSize: ScreenUtil().setSp(28)),
                 ),
               ),
             ),
             Expanded(
               flex: 1,
               child: Container(
-                height: 18.0,
-                padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                height: ScreenUtil().setHeight(36.0),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(6.0), 0, 0, 0),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   tranFrom(this.good_list1[index]["goods_price"]),
                   maxLines: 1,
                   style: TextStyle(
-                      color: Color.fromRGBO(236, 56, 56, 1), fontSize: 16.0),
+                      color: Color.fromRGBO(236, 56, 56, 1), fontSize: ScreenUtil().setSp(32)),
                 ),
               ),
             ),
@@ -389,8 +387,8 @@ class MainContentState extends State<MainContent>
 
   Widget _getFlootGoodsExample(content, index) {
     return Container(
-      width: 120.0,
-      height: 142.0,
+      width: ScreenUtil().setWidth(240),
+      height: ScreenUtil().setHeight(284.0),
       margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
       decoration: BoxDecoration(),
       padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -428,23 +426,23 @@ class MainContentState extends State<MainContent>
     return ListTile(
       leading: Image.network(
         'https://panda36.com/static/panda36/assets/img/m/zuanshi.png',
-        width: 38.0,
-        height: 40.0,
+        width: ScreenUtil().setWidth(76.0),
+        height: ScreenUtil().setHeight(80.0),
       ),
       title: Text(
         text["ad_name"] != null ? text["ad_name"] : '加载中',
-        style: TextStyle(color: Color.fromRGBO(48, 49, 51, 1), fontSize: 18.0),
+        style: TextStyle(color: Color.fromRGBO(48, 49, 51, 1), fontSize: ScreenUtil().setSp(36)),
       ),
       subtitle: Text(
         'Competitive Products For You',
         maxLines: 1,
         style:
-            TextStyle(color: Color.fromRGBO(144, 147, 153, 1), fontSize: 16.0),
+            TextStyle(color: Color.fromRGBO(144, 147, 153, 1), fontSize: ScreenUtil().setSp(30)),
         textAlign: TextAlign.left,
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
-        size: 22.0,
+        size: ScreenUtil().setSp(40),
         color: Color.fromRGBO(144, 147, 153, 1),
       ),
     );
@@ -453,15 +451,15 @@ class MainContentState extends State<MainContent>
   //一楼商品
   Widget FloorOneContent() {
     return Container(
-      height: 320.0,
+      height: ScreenUtil().setHeight(640.0),
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(16.0), 0, 0),
       color: Colors.white,
       child: Column(
         children: <Widget>[
           Container(
-            height: 80.0,
-            padding: EdgeInsets.fromLTRB(15, 6, 15, 0),
+            height: ScreenUtil().setHeight(160.0),
+            padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10.0), ScreenUtil().setHeight(12.0), ScreenUtil().setWidth(10.0), 0),
             child:
                 this.text01 != null ? _myListTile(this.text01) : Text('nihao'),
           ),
@@ -474,8 +472,8 @@ class MainContentState extends State<MainContent>
               ),
             ),
             child: Container(
-              height: 180.0,
-              margin: EdgeInsets.fromLTRB(20, 60, 0, 0),
+              height: ScreenUtil().setHeight(360.0),
+              margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(40.0), ScreenUtil().setHeight(120.0), 0, 0),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(4),
@@ -536,20 +534,20 @@ class MainContentState extends State<MainContent>
                   blurRadius: 5.0,
                 )
               ]),
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, ScreenUtil().setHeight(10)),
           child: Column(
             children: <Widget>[
               Expanded(
                 flex: 5,
                 child: Container(
-                  width: 380.0,
-                  height: 390.0,
+                  height: ScreenUtil().setHeight(780.0),
+                  width: ScreenUtil().setWidth(760),
                   child: ClipRRect(
                     borderRadius: new BorderRadius.vertical(
                       top: Radius.elliptical(8, 8),
                     ),
                     child: Image.network(
-                      url + val['goods_image'],
+                      G.url + val['goods_image'],
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -557,25 +555,25 @@ class MainContentState extends State<MainContent>
               ),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                  padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), 0, 0, 0),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     val[name],
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: Color.fromRGBO(48, 49, 51, 1), fontSize: 15.0),
+                        color: Color.fromRGBO(48, 49, 51, 1), fontSize:ScreenUtil().setSp(28)),
                   ),
                 ),
               ),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                  padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(8), 0, 0, 0),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     tranFrom(val["goods_price"]),
                     style: TextStyle(
-                        color: Color.fromRGBO(236, 56, 56, 1), fontSize: 16.0),
+                        color: Color.fromRGBO(236, 56, 56, 1), fontSize: ScreenUtil().setSp(32)),
                   ),
                 ),
               ),
@@ -604,14 +602,14 @@ class MainContentState extends State<MainContent>
                   blurRadius: 5.0,
                 )
               ]),
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, ScreenUtil().setWidth(10)),
           child: Column(
             children: <Widget>[
               Expanded(
                 flex: 5,
                 child: Container(
-                  width: 380.0,
-                  height: 390.0,
+                  height: ScreenUtil().setHeight(780.0),
+                  width: ScreenUtil().setWidth(760),
                   color: Colors.black12,
                 ),
               ),
@@ -641,17 +639,17 @@ class MainContentState extends State<MainContent>
   Widget FloorTwoContent(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(16.0), 0, 0),
       color: Colors.white,
       child: Column(
         children: <Widget>[
           Container(
-            height: 80.0,
-            padding: EdgeInsets.fromLTRB(15, 6, 15, 0),
+            height: ScreenUtil().setHeight(160),
+            padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(30), ScreenUtil().setWidth(12), ScreenUtil().setWidth(30), 0),
             child: text02 != null ? _myListTile(this.text02) : Text('nihao'),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+            padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), ScreenUtil().setHeight(20)),
             color: Colors.white,
             child: Wrap(
               spacing: 10,
@@ -670,19 +668,17 @@ class MainContentState extends State<MainContent>
 //三楼商品
   Widget FloorThreeContent(BuildContext context) {
     return Container(
-//      height: 415.0,
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
       color: Colors.white,
       child: Column(children: <Widget>[
         Container(
-          height: 80.0,
-          padding: EdgeInsets.fromLTRB(15, 6, 15, 0),
+          height: ScreenUtil().setHeight(160),
+          padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(30), ScreenUtil().setWidth(12), ScreenUtil().setWidth(30), 0),
           child: text03 != null ? _myListTile(this.text03) : Text('nihao'),
         ),
         Container(
-//          height: 330.0,
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+          padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), ScreenUtil().setHeight(20)),
           color: Colors.white,
           child: Wrap(
             spacing: 10,
@@ -700,32 +696,33 @@ class MainContentState extends State<MainContent>
   Widget FloorFourContent(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      margin: EdgeInsets.fromLTRB(0, 8, 0, 0),
+      margin: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(10), 0, 0),
       child: Column(children: <Widget>[
         Container(
-          height: 60.0,
+          height:ScreenUtil().setHeight(120),
           alignment: Alignment.center,
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+          padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(30), 0, ScreenUtil().setWidth(30), 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.network(
                 'https://panda36.com/static/panda36/assets/img/m/love.png',
-                width: 28.0,
-                height: 30.0,
+                width: ScreenUtil().setWidth(60),
+                height: ScreenUtil().setHeight(60),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), 0, 0, 0),
                 child: Text(
                   'Рекомендации',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Color.fromRGBO(48, 49, 51, 1), fontSize: 17.0),
+                      color: Color.fromRGBO(48, 49, 51, 1), fontSize: ScreenUtil().setSp(32)),
                 ),
               ),
             ],
           ),
         ),
+
         Container(
           padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
           child: Wrap(
@@ -759,11 +756,21 @@ class MainContentState extends State<MainContent>
             FloorTwoContent(context),
             FloorThreeContent(context),
             FloorFourContent(context),
+
           ],
+          controller: _scrollController,
         ),
       ),
     );
   }
+
+
+
+//  Future<List<int>> fakeRequest(int from, int to) async {
+//    return Future.delayed(Duration(seconds: 2), () {
+//      return List.generate(to - from, (i) => i + from);
+//    });
+//  }
 
   @override
   void initState() {
@@ -771,11 +778,41 @@ class MainContentState extends State<MainContent>
     super.initState();
     _getIndex();
     _getGoodsList();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _getMoreData();
+      }
+    });
   }
+  _getMoreData() async {
+    if (!isPerformingRequest) {
+      setState(() => isPerformingRequest = true);
+      var formData = {
+        'id': "",
+        'page': this.page,
+        'limit': 20,
+        'where_by': 'all',
+        'order_by': 'default',
+        'sort_asc': ""
+      };
 
+      var result = await fakeRequest(formData);
+      Map val = result.data;
+      if (val['status'] == 0) {
+        setState(() {
+          this.list.addAll(val['data']['list']);
+          isPerformingRequest = false;
+          ++this.page;
+        });
+      }else {
+        G.toast(val['messages']);
+      }
+    }
+  }
   @override
   void dispose() {
     // TODO: implement dispose
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -789,5 +826,16 @@ class MainContentState extends State<MainContent>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isPerformingRequest ? 1.0 : 0.0,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 }

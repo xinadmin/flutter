@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
   @override
-  Map arguments;
 
-  SearchPage({Key key, this.arguments}) : super(key: key);
 
   SearchPageState createState() =>
-      new SearchPageState(arguments: this.arguments);
+      new SearchPageState();
 }
 
 class SearchPageState extends State<SearchPage> {
   @override
-  Map arguments;
 
-  SearchPageState({this.arguments});
+  SearchPageState();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +21,7 @@ class SearchPageState extends State<SearchPage> {
       ),
       body: Container(
         child: FloatingActionButton(
-          child: Text("${arguments != null ? arguments['id'] : ''}"),
+          child: Text("asd"),
           onPressed: () {
             Navigator.of(context).pop();
           },
