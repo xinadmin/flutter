@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/cartInfo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import '../../provide/cart.dart';
@@ -108,11 +109,15 @@ class CartBottom extends StatelessWidget {
   //结算按钮
   Widget goButton(context){
     int allGoodsCount =  Provide.value<CartProvide>(context).allGoodsCount;
+    List<CartInfoMode> cart = Provide.value<CartProvide>(context).cartList;
+
     return Container(
       width: ScreenUtil().setWidth(300),
       padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(4), 0, ScreenUtil().setWidth(4), 0),
       child:InkWell(
-        onTap: (){},
+        onTap: (){
+          Navigator.pushNamed(context, '/createdOrderPage');
+        },
         child: Container(
           padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), ScreenUtil().setWidth(18), ScreenUtil().setWidth(10),ScreenUtil().setWidth(18)),
           alignment: Alignment.center,

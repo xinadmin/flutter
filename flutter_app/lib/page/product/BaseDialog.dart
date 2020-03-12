@@ -380,14 +380,18 @@ class SureDialogState extends State<SureDialog> {
               'goods_id': attr[index]['id'],
               'goods_number': num.text,
             };
+            G.loading.show(context);
             var result = await G.req.cart.join(formData);
             Map val = result.data;
             if (val['status'] == 0) {
                 G.toast(val['messages']);
-                _getCartInfo(context);
+                await Provide.value<CartProvide>(context).save();
+                G.loading.hide(context);
                 Navigator.pop(context);
-              }
-//            });
+            }else {
+              G.loading.hide(context);
+              G.toast(val['messages']);
+            }
           }, '加入购物车'),
         );
     }else {
@@ -402,11 +406,14 @@ class SureDialogState extends State<SureDialog> {
               'goods_number': num.text,
               'type': 'buyNow'
             };
+            G.loading.show(context);
             var result = await G.req.cart.join(formData);
             Map val = result.data;
               if (val['status'] == 0) {
+                G.loading.hide(context);
                 Navigator.pushNamed(context, '/createdOrderPage');
               }else {
+                G.loading.hide(context);
                 G.toast(val['messages']);
               }
           }, '立即购买'),

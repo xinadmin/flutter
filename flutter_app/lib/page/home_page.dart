@@ -43,7 +43,8 @@ class MainContentState extends State<MainContent>
   bool isPerformingRequest = false;
 
 //  首页轮播图，导航栏，广告位，楼层数据
-  void _getIndex() async {
+  void _getIndex(BuildContext context) async {
+    G.loading.show(context);
     var result = await G.req.index.index();
     Map val = result.data;
     if (val['status'] == 0) {
@@ -59,6 +60,7 @@ class MainContentState extends State<MainContent>
         this.text02 = val['text02'];
         this.text03 = val['text03'];
         this.bgcolor = this.adver[0]['ad_name'];
+        G.loading.hide(context);
       });
     }
   }
@@ -116,11 +118,16 @@ class MainContentState extends State<MainContent>
           padding: const EdgeInsets.only(
             left: 10,
           ),
-          child: Icon(
-            Icons.camera,
-            color: Colors.white,
-            size: ScreenUtil().setSp(54),
-          ),
+          child: InkWell(
+            child: Icon(
+              Icons.camera,
+              color: Colors.white,
+              size: ScreenUtil().setSp(54),
+            ),
+            onTap: (){
+              formClean();
+            },
+          )
         )
       ],
     );
@@ -333,7 +340,7 @@ class MainContentState extends State<MainContent>
         height: ScreenUtil().setHeight(284.0),
         margin: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), 0, 0, 0),
         decoration: BoxDecoration(),
-        padding: EdgeInsets.fromLTRB(0, 0, 0, ScreenUtil().setHeight(10.0)),
+        padding: EdgeInsets.fromLTRB(0, 0, ScreenUtil().setWidth(20.0), ScreenUtil().setHeight(20.0)),
         child: Column(
           children: <Widget>[
             Expanded(
@@ -776,8 +783,12 @@ class MainContentState extends State<MainContent>
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getIndex();
-    _getGoodsList();
+
+    Future.delayed(Duration.zero, () async {
+      _getIndex(context);
+      _getGoodsList();
+    });
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _getMoreData();

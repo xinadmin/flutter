@@ -89,7 +89,7 @@ class CartItem extends StatelessWidget {
                       Provide.value<CurrentIndexProvide>(context).isLogin;
                   G.toast(login.toString());
 ;                  if (login) {
-                    Provide.value<CartProvide>(context).changeCheckState(item);
+                    Provide.value<CartProvide>(context).changeCheckState(item,context);
                   }
                 },
               ),

@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
     return Container(
       child: MaterialApp(
         initialRoute: '/',
-
+        navigatorKey: G.navigatorKey,
         debugShowCheckedModeBanner: false,
         onGenerateRoute: onGenerateRoute,
         theme: ThemeData(
@@ -62,10 +62,10 @@ class MyApp extends StatelessWidget {
 
    getUserInfo(context) async {
     cookies = (await Api.cookieJar)
-        .loadForRequest(Uri.parse('http://192.168.10.100/m/login/login'));
+        .loadForRequest(Uri.parse('https://panda36.com/m/login/login'));
     if (cookies.length > 0) {
       (await Api.cookieJar).saveFromResponse(
-          Uri.parse('http://102.168.10.100/m/login/login'), cookies);
+          Uri.parse('https://panda36.com/m/login/login'), cookies);
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String user = prefs.getString('user');

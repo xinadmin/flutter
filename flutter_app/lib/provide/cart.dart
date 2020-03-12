@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/model/cartInfo.dart';
 import 'dart:convert';
-import 'package:flutter_app/service/service_method.dart';
-import 'package:flutter_app/config/common.dart';
 import 'package:flutter_app/utils/global.dart';
 
 class CartProvide with ChangeNotifier {
@@ -173,7 +171,12 @@ class CartProvide with ChangeNotifier {
   }
 
   //修改选中状态
-  changeCheckState(var  cartItem) async {
+  changeCheckState(var  cartItem,context ) async {
+    G.loading.show(context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
+
     var formData = {
       'goods_id': cartItem.id,
       'is_select': cartItem.isCheck ? 0 : 1
@@ -181,9 +184,10 @@ class CartProvide with ChangeNotifier {
     var result =await G.req.cart.ischeck(formData);
     Map val = result.data;
       if (val['status'] == "0") {
-        cart.map((item) {
+        tempList.map((item) {
           if (item['goodsId'] == cartItem.goodsId) {
-            item['is_selected'] = !item.isCheck;
+            item['is_selected'] = cartItem.isCheck ? 0 : 1;
+            item['isCheck'] = cartItem.isCheck ? false : true;
           }
           if (item['isCheck']) {
             allPrice += (item['goods_number'] * item['goods_price']);
@@ -192,7 +196,15 @@ class CartProvide with ChangeNotifier {
             isAllCheck = false;
           }
         });
+        cartString = json.encode(tempList).toString();
+        prefs.setString('cartInfo', cartString); //
+        await getCartInfo();
+        G.loading.hide(context);
+      }else {
+        G.loading.hide(context);
+        G.toast(val['message']);
       }
+
     notifyListeners();
   }
 

@@ -25,7 +25,7 @@ class Loading {
                     width: 40,
                     height: 40,
                     child: CupertinoActivityIndicator(
-                      radius: 14,
+                      radius: 18,
                     ),
                   ),
                 ),

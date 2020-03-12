@@ -11,20 +11,32 @@ import 'package:flutter_app/provide/currentIndex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MemberPage extends StatelessWidget {
-  var url = "https://panda36.com";
 
-  UserData userData = G.user.data;
 
-  SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context) {
 //    getUserDetail();
+    return UserPage();
+  }
+
+}
+class UserPage extends StatefulWidget {
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
+  UserData userData;
+
+  SharedPreferences prefs;
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: new PreferredSize(
           child: new Container(
             padding:
-                new EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            new EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Stack(
               children: <Widget>[
                 Positioned(
@@ -370,7 +382,7 @@ class MemberPage extends StatelessWidget {
                 child: Image.network(
 //                  userData.profile_avatar == null
 //                      ?
-                'https://panda36.com/static/panda36/assets/img/touxianggray.png',
+                  'https://panda36.com/static/panda36/assets/img/touxianggray.png',
 //                      : url + userData.profile_avatar,
                   width: ScreenUtil().setWidth(99),
                   height: ScreenUtil().setHeight(99),
@@ -447,20 +459,21 @@ class MemberPage extends StatelessWidget {
   }
 
   loginout(context) async {
+    G.loading.show(context);
     try {
       var result = await G.req.index.logout();
       var val = result.data;
       if (val['status'] == 0) {
-//        saveisLogin('isLogin', true);
-        Provide.value<CurrentIndexProvide>(context).changeIndex(0);
-        Navigator.pushNamed(context, '/');
-        await Provide.value<CurrentIndexProvide>(context).changelogin(false);
-        await getUserDetail();
         prefs.remove('user');
-        await G.toast('退出成功');
+        await Provide.value<CurrentIndexProvide>(context).changelogin(false);
+        await Provide.value<CurrentIndexProvide>(context).changeIndex(0);
+        G.loading.hide(context);
+        G.toast(val['messages']);
+        Navigator.pushNamed(context, '/');
       }
     } catch (e) {
-      G.toast('登录');
+      G.loading.hide(context);
+      G.toast('请求出错');
     }
   }
 
@@ -474,4 +487,12 @@ class MemberPage extends StatelessWidget {
     print(val);
     G.toast(val['data'].toString());
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userData  = G.user.data ;
+  }
 }
+
+
