@@ -5,7 +5,7 @@ import 'package:flutter_app/provide/cart.dart';
 import 'package:flutter_app/page/cart_page/cart_item.dart';
 import 'package:flutter_app/page/cart_page/cart_bottom.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_app/utils/global.dart';
 class CartPage extends StatelessWidget {
   Map arguments;
 
@@ -44,14 +44,15 @@ class CartContentState extends State<CartContent> {
                       cartList= Provide.value<CartProvide>(context).cartList;
                       if(cartList.length==0){
                         return NullCarts();
-                      }else {
-
                       }
-                      return ListView.builder(
-                        itemCount: cartList.length,
-                        itemBuilder: (context,index){
-                          return CartItem(cartList[index]);
-                        },
+                      return Container(
+                        margin: EdgeInsets.only(bottom:ScreenUtil().setHeight(200)),
+                        child: ListView.builder(
+                          itemCount: cartList.length,
+                          itemBuilder: (context,index){
+                            return CartItem(cartList[index]);
+                          },
+                        ),
                       );
                     }
                 ),
@@ -65,7 +66,6 @@ class CartContentState extends State<CartContent> {
             );
           } else {
             return NullCarts();
-
           }
         },
       ),

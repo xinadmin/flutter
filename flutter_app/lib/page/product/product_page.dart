@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-import '../../provide/details_info.dart';
-import 'product_banner.dart';
-import 'product_detail.dart';
-import 'product_bottom.dart';
+import 'package:flutter_app/provide/details_info.dart';
+import 'package:flutter_app/page/product/product_banner.dart';
+import 'package:flutter_app/page/product/product_detail.dart';
+import 'package:flutter_app/page/product/product_bottom.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductPage extends StatefulWidget {
   @override
@@ -38,17 +39,17 @@ class ProductPageState extends State<ProductPage> {
               if (snapshot.hasData) {
                 return Stack(
                   children: <Widget>[
-                    ListView(
-                      children: <Widget>[
-                        ProductBanner(),
-                        ProductDeatail(),
-                      ],
+                    Container(
+                      margin:
+                          EdgeInsets.only(bottom: ScreenUtil().setHeight(140)),
+                      child: ListView(
+                        children: <Widget>[
+                          ProductBanner(),
+                          ProductDeatail(),
+                        ],
+                      ),
                     ),
-                    Positioned(
-                        bottom: 15,
-                        left: 0,
-                        child: DetailsBottom()
-                    )
+                    Positioned(bottom: 15, left: 0, child: DetailsBottom())
                   ],
                 );
               } else {
@@ -86,22 +87,17 @@ class ProductPageState extends State<ProductPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
   }
 
   @override
   void didUpdateWidget(ProductPage oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-
-
   }
 }
-

@@ -27,25 +27,25 @@ class DetailsInfoProvide with ChangeNotifier {
       if (goods_attr_key == "") {
         goodsInfo["goodsInfo"]['goods_attr_key'] = "";
       } else {
-        var attr = goodsInfo["goodsInfo"]['attr'];
+        List attr = goodsInfo["goodsInfo"]['attr'];
         Map series = {};
         var isMore = goods_attr_key.contains("_");
         if (!isMore) {
-          series[isMore] = [];
+          series[goods_attr_key] = [];
           if (attr.length > 0) {
-            attr.asMap().keys.map((index) {
-              if (index == 0) {
-                series[isMore].push({
-                  'value': attr[index]['goods_attr_value'],
-                  'selected': true,
-                });
-              } else {
-                series[isMore].push({
-                  'value': attr[index]['goods_attr_value'],
-                  'selected': false,
-                });
-              }
-            });
+               for (var index = 0 ; index < attr.length; index++ ) {
+                 if (index == 0) {
+                    series[goods_attr_key].add({
+                      'value': attr[index]['goods_attr_value'],
+                      'selected': true,
+                    });
+                 } else {
+                    series[goods_attr_key].add({
+                      'value': attr[index]['goods_attr_value'],
+                      'selected': false,
+                    });
+                  }
+               }
           } else {
             return Container(
               height: 0,

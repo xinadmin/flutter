@@ -144,7 +144,7 @@ class DetailsBottomState extends State<DetailsBottom> {
     });
   }
 
-  _showDialog({var attr, int index = 1,var isbuy}) {
+  _showDialog({List attr, int index = 1,String isbuy}) {
     showDialog(
         context: context,
         barrierDismissible: false,

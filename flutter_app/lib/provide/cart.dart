@@ -146,7 +146,8 @@ class CartProvide with ChangeNotifier {
   }
 
   //删除单个购物车商品
-  deleteOneGoods(String id) async {
+  deleteOneGoods(String id, context ) async {
+    G.loading.show(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
     List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
@@ -167,6 +168,8 @@ class CartProvide with ChangeNotifier {
       cartString = json.encode(tempList).toString();
       prefs.setString('cartInfo', cartString); //
       await getCartInfo();
+      G.loading.hide(context);
+      G.toast(val['messages']);
 
   }
 
@@ -181,53 +184,59 @@ class CartProvide with ChangeNotifier {
       'goods_id': cartItem.id,
       'is_select': cartItem.isCheck ? 0 : 1
     };
+    print(tempList);
     var result =await G.req.cart.ischeck(formData);
     Map val = result.data;
-      if (val['status'] == "0") {
-        tempList.map((item) {
-          if (item['goodsId'] == cartItem.goodsId) {
-            item['is_selected'] = cartItem.isCheck ? 0 : 1;
-            item['isCheck'] = cartItem.isCheck ? false : true;
+    var id = cartItem.id.toString();
+      if (val['status'] == 0) {
+          for (var i = 0; i<tempList.length; i++) {
+            print(cartItem.id);
+            print(tempList[i]['id']);
+            if (tempList[i]['id'] == id) {
+              tempList[i]['is_selected'] = cartItem.isCheck ? '0' : '1';
+            }
           }
-          if (item['isCheck']) {
-            allPrice += (item['goods_number'] * item['goods_price']);
-            allGoodsCount += item['goods_number'];
-          } else {
-            isAllCheck = false;
-          }
-        });
         cartString = json.encode(tempList).toString();
         prefs.setString('cartInfo', cartString); //
         await getCartInfo();
         G.loading.hide(context);
+        G.toast(val['messages']);
       }else {
         G.loading.hide(context);
-        G.toast(val['message']);
+        G.toast(val['messages']);
       }
-
-    notifyListeners();
   }
 
   //点击全选按钮操作
-  changeAllCheckBtnState(bool isCheck) async {
+  changeAllCheckBtnState(bool isCheck, context) async {
+    G.loading.show(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
     List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
     List<Map> newList = [];
-    for (var item in tempList) {
-      var newItem = item;
-      newItem['isCheck'] = isCheck;
-      newList.add(newItem);
+    List goodsId = [];
+    for (var i = 0; i<tempList.length; i++) {
+      goodsId.add(tempList[i]['id']);
     }
-
-    cartString = json.encode(newList).toString();
+    var goods = {'goods_id' : goodsId, 'is_select' : isCheck ? '0':'1'};
+    var result = await G.req.cart.ischeck(goods);
+    Map val = result.data;
+    if (val['status'] == 0) {
+      tempList.forEach((item) {
+        item['is_selected'] = isCheck ? '0':'1';
+      });
+    }
+    cartString = json.encode(tempList).toString();
     prefs.setString('cartInfo', cartString); //
     await getCartInfo();
+    G.loading.hide(context);
+    G.toast(val['messages']);
   }
 
   //增加减少数量的操作
 
-  addOrReduceAction(var cartItem, String todo) async {
+  addOrReduceAction(var cartItem, String todo , context) async {
+    G.loading.show(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cartString = prefs.getString('cartInfo');
     List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
@@ -256,6 +265,7 @@ class CartProvide with ChangeNotifier {
       cartString = json.encode(tempList).toString();
       prefs.setString('cartInfo', cartString); //
       await getCartInfo();
+      G.loading.hide(context);
     }
   }
 }

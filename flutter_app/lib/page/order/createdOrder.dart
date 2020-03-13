@@ -94,7 +94,6 @@ class _CreatedOrderPageState extends State<CreatedOrderPage> {
   }
 
   List<Widget> goodsContent() {
-    print(goodsList.length);
     if (goodsList.length > 0) {
       var list = goodsList.map((val) {
         return Container(

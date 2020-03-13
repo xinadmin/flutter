@@ -4,8 +4,6 @@ import 'package:provide/provide.dart';
 import 'package:flutter_app/config/common.dart';
 import 'package:flutter_app/provide/details_info.dart';
 import 'package:flutter_app/provide/currentIndex.dart';
-import 'package:flutter_app/service/service_method.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_app/provide/cart.dart';
 import 'package:flutter_app/utils/global.dart';
 class SureDialog extends StatefulWidget {
@@ -70,8 +68,8 @@ class SureDialogState extends State<SureDialog> {
                       child: Text(
                         key,
                         style: TextStyle(
-                            fontSize: ScreenUtil().setSp(36),
-                            color: Colors.black),
+                            fontSize: ScreenUtil().setSp(32),
+                            color: Colors.black26),
                       ),
                     ),
                     Container(
@@ -99,7 +97,6 @@ class SureDialogState extends State<SureDialog> {
       for(var i = 0;i<attr.length;i++){
         list.add(
           Container(
-            width: 80.0,
             margin: EdgeInsets.fromLTRB(0, 0,  ScreenUtil().setWidth(8),  ScreenUtil().setHeight(8)),
             child: RaisedButton(
               elevation: 0,
@@ -107,7 +104,7 @@ class SureDialogState extends State<SureDialog> {
               child: Text(attr[i]['value'],
                 style: TextStyle(
                   color: attr[i]['selected']?Color.fromRGBO(236, 56, 56, 1):Colors.black,
-                  fontSize: ScreenUtil().setSp(30),
+                  fontSize: ScreenUtil().setSp(28),
                 ),
               ),
               onPressed: () {
@@ -133,7 +130,7 @@ class SureDialogState extends State<SureDialog> {
             child: Text(
               'Число',
               style: TextStyle(
-                  fontSize: ScreenUtil().setSp(36), color: Colors.black),
+                  fontSize: ScreenUtil().setSp(34), color: Colors.black26),
             ),
           ),
           Positioned(
@@ -293,7 +290,7 @@ class SureDialogState extends State<SureDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          tranFrom(item[0]['goods_price']),
+                          tranFrom(item[index]['goods_price']),
                           style: TextStyle(
                             color: Color.fromRGBO(236, 56, 56, 1),
                             fontSize:  ScreenUtil().setSp(40),
@@ -303,7 +300,7 @@ class SureDialogState extends State<SureDialog> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
                           child: Text(
-                            'Запас:' + item[0]['inventory_quantity'],
+                            'Запас:' + item[index]['inventory_quantity'],
                             style: TextStyle(
                               color: Color.fromRGBO(96, 98, 102, 1),
                               fontSize: ScreenUtil().setSp(32),
@@ -314,7 +311,7 @@ class SureDialogState extends State<SureDialog> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(0,  ScreenUtil().setHeight(8), 0, 0),
                           child: Text(
-                            'Выбранные:' + item[0]['goods_attr_value'],
+                            'Выбранные:' + item[index]['goods_attr_value'],
                             style: TextStyle(
                               color: Color.fromRGBO(96, 98, 102, 1),
                               fontSize: ScreenUtil().setSp(32),
@@ -386,10 +383,10 @@ class SureDialogState extends State<SureDialog> {
             if (val['status'] == 0) {
                 G.toast(val['messages']);
                 await Provide.value<CartProvide>(context).save();
-                G.loading.hide(context);
+                await G.loading.hide(context);
                 Navigator.pop(context);
             }else {
-              G.loading.hide(context);
+              await G.loading.hide(context);
               G.toast(val['messages']);
             }
           }, '加入购物车'),
@@ -402,7 +399,7 @@ class SureDialogState extends State<SureDialog> {
               return ;
             }
             var formData = {
-              'goods_id': attr[index],
+              'goods_id': attr[index]['id'],
               'goods_number': num.text,
               'type': 'buyNow'
             };
@@ -410,10 +407,12 @@ class SureDialogState extends State<SureDialog> {
             var result = await G.req.cart.join(formData);
             Map val = result.data;
               if (val['status'] == 0) {
-                G.loading.hide(context);
+                await G.loading.hide(context);
+                await Provide.value<CartProvide>(context).save();
                 Navigator.pushNamed(context, '/createdOrderPage');
               }else {
-                G.loading.hide(context);
+
+                await G.loading.hide(context);
                 G.toast(val['messages']);
               }
           }, '立即购买'),

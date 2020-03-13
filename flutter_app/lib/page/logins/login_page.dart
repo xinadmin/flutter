@@ -167,7 +167,7 @@ class LoginPageState extends State<LoginPage> {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          height: ScreenUtil().setHeight(90),
+                          height: ScreenUtil().setHeight(80),
                           margin: EdgeInsets.fromLTRB(
                               ScreenUtil().setWidth(40),
                               ScreenUtil().setWidth(40),
@@ -177,7 +177,7 @@ class LoginPageState extends State<LoginPage> {
                             child: Text(
                               '登陆',
                               style: TextStyle(
-                                fontSize: ScreenUtil().setSp(28),
+                                fontSize: ScreenUtil().setSp(30),
                                 color: Colors.white,
                               ),
                             ),
@@ -269,6 +269,11 @@ class LoginPageState extends State<LoginPage> {
       }else {
         G.loading.hide(context);
         await G.toast(val.messages);
+        setState(() {
+          this.captcha = "";
+          this.nowtime =
+              new DateTime.now().millisecondsSinceEpoch;
+        });
       }
     } catch (e) {
       G.loading.hide(context);

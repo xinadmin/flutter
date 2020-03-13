@@ -14,86 +14,31 @@ class CartCount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: ScreenUtil().setWidth(280),
-      margin: EdgeInsets.only(top:5.0),
+      margin: EdgeInsets.only(top:ScreenUtil().setHeight(10)),
       child: NumWidget(context)
     );
   }
-  // 减少按钮
-  Widget _reduceBtn(context){
-    return InkWell(
-      onTap: (){
-        Provide.value<CartProvide>(context).addOrReduceAction(item,'reduce');
-      },
-      child: Container(
-        width: ScreenUtil().setWidth(45),
-        height: ScreenUtil().setHeight(45),
-        alignment: Alignment.center,
-       
-        decoration: BoxDecoration(
-          color: item.count>1?Colors.white:Colors.black12,
-          border:Border(
-            right:BorderSide(width:1,color:Colors.black12)
-          )
-        ),
-        child:item.count>1? Text('-'):Text(' '),
-      ),
-    );
-  }
-
-  //添加按钮
-  Widget _addBtn(context){
-    return InkWell(
-      onTap: (){
-        Provide.value<CartProvide>(context).addOrReduceAction(item,'add');
-      },
-      child: Container(
-        width: ScreenUtil().setWidth(45),
-        height: ScreenUtil().setHeight(45),
-        alignment: Alignment.center,
-       
-         decoration: BoxDecoration(
-          color: Colors.white,
-          border:Border(
-            left:BorderSide(width:1,color:Colors.black12)
-          )
-        ),
-        child: Text('+'),
-      ),
-    );
-  }
-
-  //中间数量显示区域
-  Widget _countArea(){
-    return Container(
-      width: ScreenUtil().setWidth(70),
-      height: ScreenUtil().setHeight(45),
-      alignment: Alignment.center,
-      color: Colors.white,
-       child: Text('${item.count}'),
-    );
-  }
-
 //  数量显示区域
   Widget NumWidget(BuildContext context) {
     return Container(
       width: ScreenUtil().setWidth(480),
-//      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
       height: 40.0,
             child: Wrap(
               children: <Widget>[
                 Container(
-                  width: ScreenUtil().setWidth(50),
-                  height: ScreenUtil().setHeight(50),
+                  width: ScreenUtil().setWidth(55),
+                  height: ScreenUtil().setHeight(55),
                   alignment: Alignment.center,
                   decoration:
                   BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
                   child: IconButton(
                     icon: Icon(Icons.remove),
                     padding: EdgeInsets.all(0),
+                    iconSize: ScreenUtil().setSp(38),
                     color: item.goods_number==1?hex('#d6d6d6'): Color.fromRGBO(85, 85, 85, 1),
                     onPressed: () {
                       if(item.goods_number>1){
-                        Provide.value<CartProvide>(context).addOrReduceAction(item,'reduce');
+                        Provide.value<CartProvide>(context).addOrReduceAction(item,'reduce',context);
                       }
                     },
                   ),
@@ -101,15 +46,15 @@ class CartCount extends StatelessWidget {
                 Container(
                   alignment: Alignment.center,
                   width: ScreenUtil().setWidth(80),
-                  height: ScreenUtil().setHeight(50),
+                  height: ScreenUtil().setHeight(55),
                   decoration:BoxDecoration(
                     color: Color.fromRGBO(245, 245, 245, 1),
                   ),
                   child: Text('${item.goods_number}'),
                 ),
                 Container(
-                  width: ScreenUtil().setWidth(50),
-                  height: ScreenUtil().setHeight(50),
+                  width: ScreenUtil().setWidth(55),
+                  height: ScreenUtil().setHeight(55),
                   alignment: Alignment.center,
                   decoration:
                   BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
@@ -117,8 +62,9 @@ class CartCount extends StatelessWidget {
                     icon: Icon(Icons.add),
                     color: Color.fromRGBO(85, 85, 85, 1),
                     padding: EdgeInsets.all(0),
+                    iconSize: ScreenUtil().setSp(38),
                     onPressed: () {
-                      Provide.value<CartProvide>(context).addOrReduceAction(item,'add');
+                      Provide.value<CartProvide>(context).addOrReduceAction(item,'add',context);
                     },
                   ),
                 ),

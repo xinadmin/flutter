@@ -18,14 +18,17 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 10.0),
+//      padding: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 10.0),
+      padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(10), ScreenUtil().setHeight(10), ScreenUtil().setWidth(10), ScreenUtil().setHeight(10)),
+
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _cartImage(context, item),
-          _cartGoodsName(item),
+          _cartGoodsName(item,context),
           _cartPrice(context, item)
         ],
       ),
@@ -40,16 +43,16 @@ class CartItem extends StatelessWidget {
         children: <Widget>[
           Positioned(
             child: Container(
-              width: ScreenUtil().setWidth(190),
-              height: ScreenUtil().setHeight(190),
+              width: ScreenUtil().setWidth(210),
+              height: ScreenUtil().setHeight(210),
             ),
           ),
           Positioned(
             left: 3,
             top: 3,
             child: Container(
-              width: ScreenUtil().setWidth(177),
-              height: ScreenUtil().setHeight(177),
+              width: ScreenUtil().setWidth(184),
+              height: ScreenUtil().setHeight(184),
               padding: EdgeInsets.all(3.0),
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -62,8 +65,14 @@ class CartItem extends StatelessWidget {
                       blurRadius: 5.0,
                     )
                   ]),
-              child:
-                  Image.network(G.url + item.goods_image, fit: BoxFit.cover),
+              child:InkWell(
+                child:Image.network(G.url + item.goods_image, fit: BoxFit.cover),
+                onTap: () {
+                  Navigator.pushNamed(context, '/product', arguments: {
+                    "goodsId": item.goods_series_id,
+                  });
+                },
+              )
 //              getCacheImage(imageUrl:url + item['goods_image'], width:ScreenUtil().setWidth(170),height:ScreenUtil().setHeight(170))
             ),
           ),
@@ -72,14 +81,14 @@ class CartItem extends StatelessWidget {
             top: 0,
             child: Container(
               alignment: Alignment.center,
-              width: ScreenUtil().setWidth(60),
-              height: ScreenUtil().setHeight(60),
+              width: ScreenUtil().setWidth(50),
+              height: ScreenUtil().setHeight(50),
               child: IconButton(
                 padding: EdgeInsets.all(0),
                 alignment: Alignment.topLeft,
                 icon: Icon(
                   Icons.check_circle,
-                  size: 28.0,
+                  size: ScreenUtil().setSp(48),
                   color: item.isCheck
                       ? Color.fromRGBO(236, 56, 56, 1)
                       : Color.fromRGBO(192, 196, 204, 1),
@@ -87,7 +96,6 @@ class CartItem extends StatelessWidget {
                 onPressed: () {
                   var login =
                       Provide.value<CurrentIndexProvide>(context).isLogin;
-                  G.toast(login.toString());
 ;                  if (login) {
                     Provide.value<CartProvide>(context).changeCheckState(item,context);
                   }
@@ -101,21 +109,28 @@ class CartItem extends StatelessWidget {
   }
 
   //商品名称
-  Widget _cartGoodsName(item) {
+  Widget _cartGoodsName(item, context) {
     return Container(
-      width: ScreenUtil().setWidth(460),
+      width: ScreenUtil().setWidth(450),
       padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTitle(item.localeGoodsName,18.0,Color.fromRGBO(48, 49, 51, 1),EdgeInsets.fromLTRB(0, 8, 0, 5),true),
-          ListTitle(item.goods_attr_value,15.0,Color.fromRGBO(144, 147, 153, 1),EdgeInsets.fromLTRB(0, 3, 0, 5),false),
-          ListTitle(tranFrom(item.goods_price) + '(' + item.goods_price + ")",18.0,Color.fromRGBO(236, 56, 56, 1),EdgeInsets.fromLTRB(0, 0, 0, 5),true),
-          ListTitle('PV:' + item.goods_pv,15.0,Color.fromRGBO(144, 147, 153, 1),EdgeInsets.fromLTRB(0, 0, 0, 5),true),
-          CartCount(item),
-        ],
-      ),
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ListTitle(item.localeGoodsName,18.0,Color.fromRGBO(48, 49, 51, 1),EdgeInsets.fromLTRB(0, 3, 0, 0),true),
+            ListTitle(item.goods_attr_value,15.0,Color.fromRGBO(144, 147, 153, 1),EdgeInsets.fromLTRB(0, 2, 0, 0),false),
+            ListTitle(tranFrom(item.goods_price) + '(' + item.goods_price + ")",18.0,Color.fromRGBO(236, 56, 56, 1),EdgeInsets.fromLTRB(0, 0, 0, 3),true),
+            ListTitle('PV:' + item.goods_pv,15.0,Color.fromRGBO(144, 147, 153, 1),EdgeInsets.fromLTRB(0, 0, 0, 3),true),
+            CartCount(item),
+          ],
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, '/product', arguments: {
+            "goodsId": item.goods_series_id,
+          });
+        },
+      )
     );
   }
 
@@ -131,10 +146,10 @@ class CartItem extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Provide.value<CartProvide>(context)
-                    .deleteOneGoods(item.id);
+                    .deleteOneGoods(item.id,context);
               },
               child: Icon(
-                Icons.close,
+                Icons.delete_forever,
                 color: Color.fromRGBO(144, 147, 153, 1),
                 size: 30,
               ),

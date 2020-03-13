@@ -24,9 +24,7 @@ class MainContent extends StatefulWidget {
   MainContentState createState() => new MainContentState();
 }
 
-class MainContentState extends State<MainContent>
-    with TickerProviderStateMixin {
-  var url = "https://panda36.com";
+class MainContentState extends State<MainContent> {
   var adver = [];
   var navList = [];
   Map adver1 = {'ad_image': "", 'ad_url': ""};
@@ -43,8 +41,7 @@ class MainContentState extends State<MainContent>
   bool isPerformingRequest = false;
 
 //  首页轮播图，导航栏，广告位，楼层数据
-  void _getIndex(BuildContext context) async {
-    G.loading.show(context);
+  void _getIndex() async {
     var result = await G.req.index.index();
     Map val = result.data;
     if (val['status'] == 0) {
@@ -60,7 +57,6 @@ class MainContentState extends State<MainContent>
         this.text02 = val['text02'];
         this.text03 = val['text03'];
         this.bgcolor = this.adver[0]['ad_name'];
-        G.loading.hide(context);
       });
     }
   }
@@ -93,24 +89,28 @@ class MainContentState extends State<MainContent>
 // 头部导航栏
   Widget TextFileWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: Container(
             //修饰黑色背景与圆角
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(20),
             ),
-            alignment: Alignment.center,
-            height: ScreenUtil().setHeight(72),
+            alignment: Alignment.centerLeft,
+            height: ScreenUtil().setHeight(52),
             padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0.0, 0.0, 0.0),
-            child: Text(
-              '请输入商品关键词',
-              style: TextStyle(
-                color: Colors.black12,
-              ),
-            ),
+//            child: Text(
+//              '请输入商品关键词',
+//              style: TextStyle(
+//                color: Colors.black12,
+//              ),
+//            ),
+          child: Icon(
+            Icons.search,
+            size: ScreenUtil().setSp(50),
+            color: Colors.black87,
+          ),
           ),
           flex: 1,
         ),
@@ -189,22 +189,24 @@ class MainContentState extends State<MainContent>
       return GestureDetector(
         child: Container(
           width: ScreenUtil().setWidth(187),
+          height: ScreenUtil().setHeight(220),
           child: Column(
             children: <Widget>[
               ClipOval(
                 child: Image.network(
                   G.url + value["ad_image"],
-                  height: ScreenUtil().setHeight(88),
-                  width: ScreenUtil().setWidth(88),
+                  height: ScreenUtil().setHeight(105),
+                  width: ScreenUtil().setWidth(105),
                 ),
               ),
               Text(
                 value["ad_name"],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: ScreenUtil().setSp(28),
+                  fontSize: ScreenUtil().setSp(25),
                   color: hex('#303133'),
                 ),
+                maxLines: 3,
               ),
             ],
           ),
@@ -265,9 +267,10 @@ class MainContentState extends State<MainContent>
               items: this.adver.length > 0
                   ? this._getAdv()
                   : this._getAdvExample(),
-              height: ScreenUtil().setHeight(400),
+
+              height: ScreenUtil().setHeight(360),
               autoPlay: true,
-//              aspectRatio: 2.0,
+              aspectRatio: 16/9,
               viewportFraction:1.0,
               onPageChanged: (index) {
                 setState(() {
@@ -311,7 +314,7 @@ class MainContentState extends State<MainContent>
       child: Column(
         children: <Widget>[
           Container(
-              height: ScreenUtil().setHeight(190.0),
+              height: ScreenUtil().setHeight(210.0),
               child: Row(
                 children: this.navList.length > 0
                     ? _getNav(context)
@@ -773,22 +776,12 @@ class MainContentState extends State<MainContent>
 
 
 
-//  Future<List<int>> fakeRequest(int from, int to) async {
-//    return Future.delayed(Duration(seconds: 2), () {
-//      return List.generate(to - from, (i) => i + from);
-//    });
-//  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    Future.delayed(Duration.zero, () async {
-      _getIndex(context);
-      _getGoodsList();
-    });
-
+    _getIndex();
+    _getGoodsList();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _getMoreData();
