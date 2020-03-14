@@ -42,6 +42,7 @@ class OrderController {
   }
   //获取运费
   Future<Response> getFreight(data) {
+    print(data);
     return _dio.post(servicePath['Shop-Shopping_step-getFreight'],data:data);
   }
   //确认收货

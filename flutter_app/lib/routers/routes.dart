@@ -12,7 +12,7 @@ import 'package:flutter_app/page/message/address.dart';
 import 'package:flutter_app/page/message/updateLoginPassword.dart';
 import 'package:flutter_app/page/message/updatSecurityPassword.dart';
 import 'package:flutter_app/page/order/createdOrder.dart';
-
+import 'package:flutter_app/page/pay/paymethod.dart';
 final routers = {
   '/login': (context, {arguments}) => LoginPage(arguments: arguments),
   '/sigin': (context, {arguments}) => SiginPage(arguments: arguments),
@@ -27,7 +27,7 @@ final routers = {
   '/updateLoginPassword':(context) =>UpdateLoginPassword(),
   '/createdOrderPage': (context) => CreatedOrderPage(),
   '/updateSecurityPassword':(context) =>UpdateSecurityPassword(),
-
+  '/pay':(context,{arguments}) =>payPage(arguments: arguments),
   '/': (context) => IndexPage(),
 };
 

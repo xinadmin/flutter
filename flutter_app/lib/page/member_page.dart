@@ -472,6 +472,10 @@ class _UserPageState extends State<UserPage> {
         Navigator.pushNamed(context, '/');
       }
     } catch (e) {
+      prefs.remove('user');
+      await Provide.value<CurrentIndexProvide>(context).changelogin(false);
+      await Provide.value<CurrentIndexProvide>(context).changeIndex(0);
+      Navigator.pushNamed(context, '/');
       G.loading.hide(context);
       G.toast('请求出错');
     }
