@@ -237,28 +237,42 @@ class SureDialogState extends State<SureDialog> {
   Widget DigContentInner(BuildContext context) {
 //    判断显示商品参数弹窗内容
     if (isSelectDiglog == 0) {
-      return Container(
+      return  Container(
+        height: ScreenUtil().setHeight(800),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius:
           new BorderRadius.vertical(top: Radius.elliptical(10, 10)),
         ),
-        child: Column(
+        child: Stack(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(10), 0, ScreenUtil().setHeight(10)),
-              child: Text(
-                'Параметры продукта',
-                style: TextStyle(
-                    color: Color.fromRGBO(0, 0, 0, 1), fontSize: ScreenUtil().setSp(44)),
+              padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(110)),
+              child: ListView(
+              children: <Widget>[
+              Container(
+              alignment: Alignment.center,
+                padding: EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(10), 0, ScreenUtil().setHeight(10)),
+                child: Text(
+                  'Параметры продукта',
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 0, 0, 1), fontSize: ScreenUtil().setSp(44)),
+                ),
               ),
-            ),
-            Container(
-              width: ScreenUtil().setWidth(750),
-              padding: EdgeInsets.fromLTRB( ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
-              child: _getgoodsParam(context: context, goodsParam: goodsParam),
-            ),
-            DigButtonContent(context) //弹窗底部按钮
+                Container(
+                  width: ScreenUtil().setWidth(750),
+                  padding: EdgeInsets.fromLTRB( ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
+                  child: _getgoodsParam(context: context, goodsParam: goodsParam),
+                ),
+                ]
+            )
+          
+        ),
+            Positioned(
+              bottom: ScreenUtil().setHeight(4),
+              left: ScreenUtil().setWidth(15),
+              child: DigButtonContent(context) //弹窗底部按钮,
+            )
           ],
         ),
       );
@@ -364,8 +378,7 @@ class SureDialogState extends State<SureDialog> {
 
     if (isbuy == "") {
       return Container(
-        margin: EdgeInsets.only(bottom: 13),
-        padding: EdgeInsets.only(left: 6, right: 6),
+        width: ScreenUtil().setWidth(720),
         child: ButtonContent(context, () {
           Navigator.pop(context);
         }, '确定'),

@@ -149,9 +149,9 @@ class CartItem extends StatelessWidget {
                     .deleteOneGoods(item.id,context);
               },
               child: Icon(
-                Icons.delete_forever,
+                Icons.delete,
                 color: Color.fromRGBO(144, 147, 153, 1),
-                size: 30,
+                size: ScreenUtil().setSp(52),
               ),
             ),
           )

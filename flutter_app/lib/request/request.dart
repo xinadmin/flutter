@@ -4,7 +4,7 @@ import 'package:flutter_app/request/IndexController.dart';
 import 'package:flutter_app/request/GoodsController.dart';
 import 'package:flutter_app/request/CartController.dart';
 import 'package:flutter_app/request/UserController.dart';
-
+import 'package:flutter_app/request/AddressController.dart';
 import 'package:flutter_app/request/OrderController.dart';
 
 class Request {
@@ -23,6 +23,8 @@ class Request {
   UserController get user => UserController(_dio);
 
   OrderController get order => OrderController(_dio);
+
+  AddressController get address => AddressController(_dio);
 
 
 }

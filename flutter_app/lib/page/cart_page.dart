@@ -46,7 +46,7 @@ class CartContentState extends State<CartContent> {
                         return NullCarts();
                       }
                       return Container(
-                        margin: EdgeInsets.only(bottom:ScreenUtil().setHeight(200)),
+                        padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(200)),
                         child: ListView.builder(
                           itemCount: cartList.length,
                           itemBuilder: (context,index){
@@ -59,8 +59,12 @@ class CartContentState extends State<CartContent> {
                 Positioned(
                   bottom: 20,
                   left: 0,
+
                   width: ScreenUtil().setWidth(750),
-                  child: CartBottom(),
+                  child: Container(
+                    color: hex('#ffffff'),
+                    child: CartBottom(),
+                  ),
                 )
               ],
             );

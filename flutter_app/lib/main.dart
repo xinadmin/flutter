@@ -10,6 +10,8 @@ import 'package:flutter_app/provide/details_info.dart';
 import 'package:flutter_app/provide/cart.dart';
 import 'package:flutter_app/provide/currentIndex.dart';
 import 'package:flutter_app/provide/counter.dart';
+import 'package:flutter_app/provide/address.dart';
+
 import 'package:flutter_app/routers/routes.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,8 @@ void main() {
   var categoryGoodsListProvide = CategoryGoodsListProvide();
   var detailsInfoProvide = DetailsInfoProvide();
   var cartProvide = CartProvide();
+  var addressProvide = AddressProvide();
+
   var currentIndexProvide = CurrentIndexProvide();
   var counter = Counter();
   var providers = Providers();
@@ -32,6 +36,7 @@ void main() {
         Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
     ..provide(Provider<DetailsInfoProvide>.value(detailsInfoProvide))
     ..provide(Provider<CartProvide>.value(cartProvide))
+    ..provide(Provider<AddressProvide>.value(addressProvide))
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<Counter>.value(counter));
 

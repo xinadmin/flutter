@@ -6,6 +6,7 @@ import 'package:flutter_app/provide/cart.dart';
 import 'package:flutter_app/config/common.dart';
 import 'package:flutter_app/provide/currentIndex.dart';
 import 'package:flutter_app/utils/global.dart';
+import 'package:color_dart/color_dart.dart';
 
 class CartBottom extends StatelessWidget {
   @override
